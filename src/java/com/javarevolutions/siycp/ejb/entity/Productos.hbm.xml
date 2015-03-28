@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/02/2014 04:39:40 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="com.javarevolutions.siycp.ejb.entity.Productos" table="productos" catalog="siycp_jr">
+        <id name="idProducto" type="java.lang.Long">
+            <column name="id_producto" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tiposMedidas" class="com.javarevolutions.siycp.ejb.entity.TiposMedidas" fetch="select"
+        lazy="false">
+            <column name="id_tipo_medida" not-null="true" />
+        </many-to-one>
+        <many-to-one name="usuarios" class="com.javarevolutions.siycp.ejb.entity.Usuarios" fetch="select"
+        lazy="false">
+            <column name="id_usuario" not-null="true" />
+        </many-to-one>
+        <property name="nombre" type="string">
+            <column name="nombre" length="250" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="250" not-null="true" />
+        </property>
+        <property name="costo" type="float">
+            <column name="costo" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="precioGeneral" type="java.lang.Float">
+            <column name="precio_general" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="precioIntermedio" type="java.lang.Float">
+            <column name="precio_intermedio" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="precioEspecial" type="java.lang.Float">
+            <column name="precio_especial" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="tipo" length="1" not-null="true" />
+        </property>
+        <property name="cantidad" type="java.lang.Long">
+            <column name="cantidad" />
+        </property>
+        <set name="proveedoresProductoses" table="proveedores_productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_producto" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.ProveedoresProductos" />
+        </set>
+        <set name="pedidosProductoses" table="pedidos_productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_producto" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.PedidosProductos" />
+        </set>
+        <set name="ventasProductoses" table="ventas_productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_producto" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.VentasProductos" />
+        </set>
+        <set name="inventarioses" table="inventarios" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_producto" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.Inventarios" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catAccesoriosxproducto')}"/>
+        <f:event type="preRenderView" listener="#{beanAccesoriosxproducto.llenaLista}"/>
+    </f:metadata>
+    <h:form id="formTableAccesoriosxproducto">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaAccesoriosxproducto" var="obj" value="#{beanAccesoriosxproducto.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idAccesorioxproducto}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaAccesoriosxproducto"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.cat.home']} #{props['com.jr.props.de']} #{props['com.jr.props.menu.cat.accesoriosxproducto']}
+            </f:facet>
+
+            <p:ajax event="page" oncomplete="checkUn();"/>
+            <p:ajax event="rowDblselect" listener="#{beanAccesoriosxproducto.showAccesoriosxproducto}" 
+                    update=":formShowAccesoriosxproducto:dialogShowAccesoriosxproducto"
+                    oncomplete="widgetShowAccesoriosxproducto.show();"/>
+
+            <p:column style="width:2%;">
+                <f:facet name="header">
+                    <h:selectBooleanCheckbox onclick="selectUnAll(this);" id="chSelectAll"/>
+                </f:facet>
+                <h:selectBooleanCheckbox value="#{obj.select}"/>
+            </p:column>
+
+            <p:column style="width:6%; text-align: center;">
+                <f:facet name="header">
+                    <p:commandLink onclick="widgetTablaAccesoriosxproducto.unselectAllRows();"
+                        actionListener="#{beanAccesoriosxproducto.onUpdateInsertRow(null)}" 
+                               update=":formAAShowAccesoriosxproducto:dialogAccesoriosxproducto"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetAccesoriosxproducto.show();">
+                        <img src="#{resources}/images/new.gif" border="0" width="30px" height="30px"/>
+                    </p:commandLink>
+                </f:facet>
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_producto']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.idProducto}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_accesorio']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.idAccesorio}"/>
+            </p:column>
+
+            <p:column style="width: 2%">
+                <a href="#" title="#{props['com.jr.props.registro.delete']}" 
+                   onclick="setIdDelete(#{obj.idAccesorioxproducto},#{obj.cont});confirmDeleteAccesoriosxproducto.show();
+                   widgetTablaAccesoriosxproducto.unselectAllRows(); 
+                   widgetTablaAccesoriosxproducto.selectRow(#{obj.posicion});">
+                    <img src="#{resources}/images/borrar.png" border="0" width="15px" height="15px"/>
+                </a>
+            </p:column>
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaAccesoriosxproducto.unselectAllRows(); 
+                   widgetTablaAccesoriosxproducto.selectRow(#{obj.posicion});"
+                    actionListener="#{beanAccesoriosxproducto.onUpdateInsertRow(obj)}" 
+                               update=":formAAShowAccesoriosxproducto:dialogAccesoriosxproducto"
+                               title="#{props['com.jr.props.registro.update']}"
+                               oncomplete="setIdActualizar(#{obj.cont});widgetAccesoriosxproducto.show();">
+                    <img src="#{resources}/images/update.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td align="left">
+                    <p:commandButton
+                        onclick="return confirmaBorradoAll();"
+                                actionListener="#{beanAccesoriosxproducto.deleteAllSelect}"
+                                title="#{props['com.jr.props.registro.delete']}s"
+                                value="#{props['com.jr.props.registro.delete']}s"
+                                icon="ui-icon-close" style="font-size: 12px;"/>
+                        </td>
+                        <td align="right">
+                        <p:commandButton onclick="widgetTablaAccesoriosxproducto.unselectAllRows();"
+                                actionListener="#{beanAccesoriosxproducto.onUpdateInsertRow(null)}"
+                               update=":formAAShowAccesoriosxproducto:dialogAccesoriosxproducto"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetAccesoriosxproducto.show();"
+                               value="#{props['com.jr.props.registro.new']}"
+                               icon="ui-icon-newwin" style="font-size: 12px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </h:form>
+    
+    
+    <h:form id="formAAShowAccesoriosxproducto">
+    <p:dialog id="dialogAccesoriosxproducto" header="#{beanAccesoriosxproducto.tituloPantalla}" widgetVar="widgetAccesoriosxproducto"
+              showEffect="explode" hideEffect="fade"
+              closable="false">
+    <p:panel id="panelAccesoriosxproducto">
+    <h:inputHidden id="contadorAccesoriosxproductoActualizar" value="#{beanAccesoriosxproducto.dominio.cont}"/>
+    <table>
+        <tr><td align="right"><h:outputLabel for="txtIdProducto" value="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_producto']} : "/></td>
+        <td><p:inputText id="txtIdProducto" value="#{beanAccesoriosxproducto.dominio.idProducto}" required="true" 
+        label="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_producto']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.accesoriosxproducto.id_producto']}' #{props['com.jr.is.required']}"
+        disabled="#{beanAccesoriosxproducto.dominio.disabled}"/></td>
+        <td><p:message for="txtIdProducto" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtIdAccesorio" value="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_accesorio']} : "/></td>
+        <td><p:inputText id="txtIdAccesorio" value="#{beanAccesoriosxproducto.dominio.idAccesorio}" required="true" 
+        label="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_accesorio']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.accesoriosxproducto.id_accesorio']}' #{props['com.jr.is.required']}"
+        disabled="#{beanAccesoriosxproducto.dominio.disabled}"/></td>
+        <td><p:message for="txtIdAccesorio" display="icon"/></td></tr>
+
+        <tr>
+            <td align="right">
+                <p:commandButton id="btnCancelar" value="#{props['com.jr.props.btn.cancelar']}"
+                                 update=":formTableAccesoriosxproducto:tablaAccesoriosxproducto"
+                                 immediate="true"
+                                 onclick="widgetAccesoriosxproducto.hide();"/>
+            </td>
+            <td align="center">
+                <p:commandButton id="btnAceptar"
+                update="panelAccesoriosxproducto :formTableAccesoriosxproducto:messages :formTableAccesoriosxproducto:tablaAccesoriosxproducto"
+                actionListener="#{beanAccesoriosxproducto.save}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaAccesoriosxproducto.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanAccesoriosxproducto.showSave}"/>
+                <p:commandButton id="btnActualizar"
+                update="panelAccesoriosxproducto :formTableAccesoriosxproducto:messages :formTableAccesoriosxproducto:tablaAccesoriosxproducto"
+                actionListener="#{beanAccesoriosxproducto.updateRow}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaAccesoriosxproducto.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanAccesoriosxproducto.showUpdate}"/>
+            </td>
+        </tr>
+    </table>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <h:form id="formShowAccesoriosxproducto">
+    <p:dialog id="dialogShowAccesoriosxproducto" header="#{beanAccesoriosxproducto.tituloPantalla}" widgetVar="widgetShowAccesoriosxproducto"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+    <p:panel>
+    <fieldset>
+    <table>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_producto']} : "/></td>
+            <td><h:outputText value="#{beanAccesoriosxproducto.dominio.idProducto}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.accesoriosxproducto.id_accesorio']} : "/></td>
+            <td><h:outputText value="#{beanAccesoriosxproducto.dominio.idAccesorio}"/></td></tr>
+
+    </table>
+    </fieldset>
+    <fieldset>
+    <table width="100%" align="center">
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 update=":formTableAccesoriosxproducto:tablaAccesoriosxproducto"
+                                 onclick="widgetShowAccesoriosxproducto.hide();"/>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <p:confirmDialog id="confirmarDelete" showEffect="fade" hideEffect="clip" appendToBody="true"
+                message="¿#{props['com.jr.props.titulo.confirm.delete']}?"
+                header="#{props['com.jr.props.registro.delete']}" severity="alert" widgetVar="confirmDeleteAccesoriosxproducto">
+        <h:form id="formConfirmDelete">
+        <center>
+        <p:commandButton id="btnBorrarSI" value="#{props['com.jr.props.btn.si']}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                        actionListener="#{beanAccesoriosxproducto.delete}" 
+                        update=":formTableAccesoriosxproducto:tablaAccesoriosxproducto :formTableAccesoriosxproducto:messages"
+                        oncomplete="checkUn(); validateDelete(args);"/>
+        <h:inputHidden id="idAccesoriosxproductoDelete" value="#{beanAccesoriosxproducto.dominio.idAccesorioxproducto}"/>
+        <h:inputHidden id="contadorAccesoriosxproductoDelete" value="#{beanAccesoriosxproducto.dominio.cont}"/>
+        <p:commandButton id="btnBorrarNO" value="#{props['com.jr.props.btn.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                        onclick="confirmDeleteAccesoriosxproducto.hide();"/>
+        </center>
+        </h:form>
+    </p:confirmDialog>
+        
+    <script type="text/javascript">
+    function checkUn() {
+        var obj = document.getElementById("formTableAccesoriosxproducto:tablaAccesoriosxproducto:chSelectAll");
+        obj.checked = false;
+    }   
+    
+    function setIdActualizar(cont) {
+        document.getElementById("formAAShowAccesoriosxproducto:contadorAccesoriosxproductoActualizar").value = cont;
+    }
+    
+    function setIdDelete(id, cont) {
+        document.getElementById("formConfirmDelete:idAccesoriosxproductoDelete").value = id;
+        document.getElementById("formConfirmDelete:contadorAccesoriosxproductoDelete").value = cont;
+    }
+    
+    function validateDelete(args) {
+        if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            confirmDeleteAccesoriosxproducto.hide();
+        }
+    }
+    
+    function confirmaBorradoAll() {
+        var obj = document.getElementById("formTableAccesoriosxproducto:tablaAccesoriosxproducto:chSelectAll");
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        var checado = false;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                    if(obj.id != element.id) {
+                        if(element.checked) {
+                            checado = true;
+                            break;
+                        }
+                    }
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+        if(checado) {
+            var response = confirm("¿#{props['com.jr.props.titulo.confirm.delete']}?");
+            if(response) {
+                obj.checked = false;
+                checkUn();
+            }
+            return response;
+        } else {
+            alert("#{props['com.jr.props.msg.registro.deleteAll.vacio']}");
+            return false;
+        }
+        return false;
+    }
+    
+    function deleteAllMsg(args) {
+        alert(args.errorTransaction);
+    }
+    
+    function validateData(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetAccesoriosxproducto.hide();
+        }
+    }
+    
+    function selectUnAll(obj) {
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                     element.checked = obj.checked;
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+    }
+    </script>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catInventarios')}"/>
+        <f:event type="preRenderView" listener="#{beanInventarios.llenaLista}"/>
+    </f:metadata>
+    
+    <h:form id="formTableInventarios">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaInventarios" var="obj" value="#{beanInventarios.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idInventario}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaInventarios"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.cat.inventarios.header_table']}
+            </f:facet>
+            
+            <p:column style="width:6%; text-align: center;">
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            
+            <p:column style="text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.productos.one']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.productos.nombre}" style="#{obj.style}"/>&nbsp;
+                <h:outputText value="#{obj.productos.descripcion}" style="#{obj.style}"/>
+            </p:column>
+            
+            <p:column style="width: 200px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.pedidos.proveedor']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.productos.usuarios.nombre}" style="#{obj.style}"/>&nbsp;
+                <h:outputText value="#{obj.productos.usuarios.app}" style="#{obj.style}"/>&nbsp;
+                <h:outputText value="#{obj.productos.usuarios.apm}" style="#{obj.style}"/>
+            </p:column>
+            
+            <p:column style="width: 200px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.inventarios.cantidad.existencia']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.existencia}" style="#{obj.style}">
+                    <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                </h:outputText>&nbsp;
+                <h:outputText value="#{obj.productos.tiposMedidas.tipoMedida}"/>
+            </p:column>
+            
+            <p:column style="width: 200px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.inventarios.cantidad']}"/>
+                </f:facet>
+                <p:inputText
+                    value="#{obj.cantidad}" required="true" 
+                             label="#{props['com.jr.props.menu.cat.inventarios.cantidad_recibida']}"
+                             requiredMessage="#{props['com.jr.props.menu.cat.productos.cantidad.null']}"
+                             id="txtCantidad" style="width: 80px; text-align: right; height: 12px;"
+                             onfocus="widgetTablaInventarios.unselectAllRows();
+                                 widgetTablaInventarios.selectRow(#{obj.posicion});"/>
+            </p:column>
+            
+            <p:column style="width: 200px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.inventarios.minimo_existencia']}"/>
+                </f:facet>
+                <p:inputText
+                    value="#{obj.minimoExistencia}" required="true" 
+                             label="#{props['com.jr.props.menu.cat.inventarios.minimo_existencia']}"
+                             requiredMessage="#{props['com.jr.props.menu.cat.productos.cantidad.minima_existencia']}"
+                             id="txtMinimoExistencia" style="width: 80px; text-align: right; height: 12px;"
+                             onfocus="widgetTablaInventarios.unselectAllRows();
+                                 widgetTablaInventarios.selectRow(#{obj.posicion});"/>
+            </p:column>
+            <p:column style="width: 20px; text-align: center;">
+                <p:message for="txtMinimoExistencia" display="icon"/>
+            </p:column>
+
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td colspan="10" align="right">
+                    <p:commandButton
+                                actionListener="#{beanInventarios.actualizarInventario}"
+                                title="#{props['com.jr.props.menu.cat.inventarios.updateAll']}"
+                                value="#{props['com.jr.props.menu.cat.inventarios.updateAll']}"
+                                icon="ui-icon-arrowrefresh-1-w" style="font-size: 12px;"
+                                update=":formTableInventarios:messages :formTableInventarios:tablaInventarios"
+                                oncomplete="widgetTablaInventarios.unselectAllRows();
+                                validateData(args);"
+                                ajax="false"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </h:form>
+        
+    <script type="text/javascript">
+    function validateData(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else {
+            alert(args.errorTransaction);
+        }
+    }
+    </script>
+    </ui:define>
+</ui:composition>

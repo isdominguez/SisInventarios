@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catVentas')}"/>
+        <f:event type="preRenderView" listener="#{beanVentas.llenaLista}"/>
+    </f:metadata>
+    <h:form id="formTableVentas">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaVentas" var="obj" value="#{beanVentas.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idVenta}"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaVentas"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.cat.mis_ventas']}
+            </f:facet>
+
+            <p:ajax event="rowDblselect" listener="#{beanVentas.showVentas}" 
+                    update=":formShowVentas:dialogShowVentas"
+                    oncomplete="widgetShowVentas.show();"/>
+
+            <p:column style="width:6%; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.id_venta']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            <p:column style="width: 150px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.fecha_venta']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.fechaVenta}">
+                    <f:convertDateTime pattern="dd-MMM-yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column style="width: 150px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.hora_venta']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.horaVenta}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.observaciones']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.observaciones}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.cliente']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.usuarios.nombre}"/>&nbsp;
+                <h:outputText value="#{obj.usuarios.app}"/>&nbsp;
+                <h:outputText value="#{obj.usuarios.apm}"/>
+            </p:column>
+
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaVentas.unselectAllRows(); 
+                   widgetTablaVentas.selectRow(#{obj.posicion});"
+                    actionListener="#{beanVentas.onShowProductoByVenta(obj)}" 
+                    title="#{props['com.jr.props.menu.cat.productos']}"
+                    update=":formShowVentas:dialogShowVentas :formTableVentas:messages"
+                    oncomplete="widgetShowVentas.show();">
+                    <img src="#{resources}/images/accessorios.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+            
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaVentas.unselectAllRows(); 
+                   widgetTablaVentas.selectRow(#{obj.posicion});"
+                    actionListener="#{beanVentas.onUpdateInsertRow(obj)}" 
+                               update=":formAAShowVentas:dialogVentas"
+                               title="#{props['com.jr.props.menu.cat.ventas.update']}"
+                               oncomplete="setIdActualizar(#{obj.cont});widgetVentas.show();">
+                    <img src="#{resources}/images/update.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+            
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td align="left">
+                            <p:commandButton actionListener="#{beanVentas.onUpdateInsertRow(null)}"
+                               update=":formAAShowVentas:dialogVentas"
+                               title="#{props['com.jr.props.menu.cat.nueva_venta']}"
+                               oncomplete="widgetVentas.show();"
+                               value="#{props['com.jr.props.menu.cat.nueva_venta']}"
+                               icon="ui-icon-newwin" style="font-size: 12px;"/>
+                        </td>
+                        <td align="right">
+                            <p:commandButton actionListener="#{beanVentas.onUpdateInsertRow(null)}"
+                               update=":formAAShowVentas:dialogVentas"
+                               title="#{props['com.jr.props.menu.cat.nueva_venta']}"
+                               oncomplete="widgetVentas.show();"
+                               value="#{props['com.jr.props.menu.cat.nueva_venta']}"
+                               icon="ui-icon-newwin" style="font-size: 12px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </h:form>
+
+    <h:form id="formAAShowVentas">
+    <p:dialog id="dialogVentas" header="#{beanVentas.tituloPantalla} #{beanVentas.dominio.idVenta}" 
+              widgetVar="widgetVentas"
+              showEffect="explode" hideEffect="fade"
+              closable="false" onShow="widgetTablaProductos.paginator.setPage(0);">
+    <p:panel id="panelVentas" style="width: 950px; height: 470px;">
+    <h:inputHidden id="contadorVentasActualizar" value="#{beanVentas.dominio.cont}"/>
+    <table width="100%" align="center">
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.observaciones']} : "/></td>
+        <td><p:inputText id="txtCondiciones" value="#{beanVentas.dominio.observaciones}"
+                         style="width: 345px;"/></td>
+        <td align="right">
+            <table>
+                <tr>
+                    <td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.showHeader']} : "/></td>
+                    <td>
+                    <p:selectOneMenu id="txtCliente" value="#{beanVentas.cliente.idUsuario}">
+                        <f:selectItems value="#{beanClientes.lista}"
+                            var="dato"
+                            itemLabel="#{dato.nombre} #{dato.app} #{dato.apm}"
+                            itemValue="#{dato.idUsuario}"/>
+                        <p:ajax event="change" listener="#{beanVentas.changeCliente}"
+                                update="tablaProductos tablaProductosAdds"/>
+                    </p:selectOneMenu>
+                    </td>
+                  </tr>
+            </table>
+        </td>
+        </tr>
+        <tr>
+        <td colspan="2">
+        <div style="width: 500px; height: 380px; overflow: auto;">
+            <p:dataTable id="tablaProductosAdds" var="obj" value="#{beanVentas.listaProductos}"
+                         style="font-size: 14px;">
+                <f:facet name="header">
+                    #{props['com.jr.props.menu.cat.ventas.total_venta']} : $<h:outputText value="#{beanVentas.totalVenta}"
+                                     id="totalVenta">
+                        <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                    </h:outputText>
+                </f:facet>
+                <p:column style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.inventarios.cantidad']}"/>
+                    </f:facet>
+                    <p:inputText value="#{obj.cantidad}" required="true" 
+                                 label="#{props['com.jr.props.menu.cat.inventarios.cantidad']}"
+                                 requiredMessage="#{props['com.jr.props.menu.cat.productos.cantidad.null']}"
+                                 id="txtCantidad" style="width: 80px; text-align: right;"
+                                 validator="#{beanVentas.validaExistencias}">
+                        <f:attribute name="valueExistencia" value="#{obj.existencia}"/>
+                        <p:ajax event="change" listener="#{beanVentas.changeCantidad(obj)}"
+                                update=":formTableVentas:messages tablaProductosAdds"/>
+                    </p:inputText>
+                </p:column>
+                <p:column style="width: 20px; text-align: center;">
+                    <p:message for="txtCantidad" display="icon"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.existencia']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.existencia}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.one']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.nombre}"/>&nbsp;
+                    <h:outputText value="#{obj.descripcion}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.precio_estandar']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.costo}"/>
+                </p:column>
+                <p:column>
+                    <p:commandLink actionListener="#{beanVentas.removeProducto(obj)}" 
+                       update=":formAAShowVentas:tablaProductosAdds :formAAShowVentas:tablaProductos"
+                       immediate="false">
+                        <img src="#{resources}/images/borrar.png" border="0" width="15px" height="15px"/>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </div>
+        </td>
+        <td colspan="2">
+        <div style="width: 400px; height: 380px; overflow: auto;">
+            <p:dataTable id="tablaProductos" var="obj" value="#{beanVentas.listaModelProductos}"
+                 paginator="true" rows="10" selectionMode="single"
+                 lazy="true" rowKey="#{obj.idProducto}"
+                 rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+                 style="width: 100%; font-size: 14px;" widgetVar="widgetTablaProductos"
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                <f:facet name="header">
+                    #{props['com.jr.props.menu.cat.productos_disponibles']}
+                </f:facet>
+                <p:ajax event="rowSelect" listener="#{beanVentas.addProducto}" 
+                update=":formAAShowVentas:tablaProductosAdds :formAAShowVentas:tablaProductos"/>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.one']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.nombre}"/>&nbsp;
+                    <h:outputText value="#{obj.descripcion}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.precio_estandar']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.costo}"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+        </td>
+        </tr>
+        
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnCancelar" value="#{props['com.jr.props.btn.cancelar']}"
+                                 update="panelVentas :formTableVentas:tablaVentas"
+                                 process="@this" 
+                                 oncomplete="widgetVentas.hide();">
+                    <p:resetInput target="panelVentas"/>
+                </p:commandButton>
+            </td>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnAceptar"
+                update="panelVentas :formTableVentas:messages :formTableVentas:tablaVentas"
+                actionListener="#{beanVentas.save}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="validateDataInsert(args);"
+                rendered="#{beanVentas.showSave}"/>
+                <p:commandButton id="btnActualizar"
+                update="panelVentas :formTableVentas:messages :formTableVentas:tablaVentas"
+                actionListener="#{beanVentas.updateRow}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaVentas.unselectAllRows();
+                widgetTablaVentas.selectRow(#{beanVentas.dominio.posicion});
+                validateDataUpdate(args);"
+                rendered="#{beanVentas.showUpdate}"/>
+            </td>
+        </tr>
+    </table>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <h:form id="formShowVentas">
+    <p:dialog id="dialogShowVentas" header="#{beanVentas.tituloPantalla} #{beanVentas.dominio.idVenta}" 
+              widgetVar="widgetShowVentas"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+    <p:panel>
+    <fieldset>
+    <table>
+        <tr>
+        <td colspan="2">
+        <div style="width: 600px; height: 300px; overflow: auto;">
+            <p:dataTable id="consultaProductosAdds" var="obj" value="#{beanVentas.listaProductos}"
+                         style="font-size: 14px;">
+                <f:facet name="header">
+                    #{props['com.jr.props.menu.cat.productos.vendidos']}
+                </f:facet>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.one']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.nombre}"/>&nbsp;
+                    <h:outputText value="#{obj.descripcion}"/>
+                </p:column>
+                <p:column style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.inventarios.cantidad']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.cantidad}"
+                                  style="width: 30px; text-align: right;"/>
+                </p:column>
+                <p:column style="text-align: right;">
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.precio_estandar']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.costo}"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+        </td>
+        </tr>
+        <tr>
+        <td>
+        <table align="center">
+        <tr style="font-size: 14px; font-weight: bolder;"><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.fecha_venta']} : "/></td>
+            <td><h:outputText value="#{beanVentas.dominio.fechaVenta}">
+            <f:convertDateTime pattern="dd-MMM-yyyy"/>
+            </h:outputText></td></tr>
+        <tr style="font-size: 14px; font-weight: bolder;"><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.hora_venta']} : "/></td>
+            <td><h:outputText value="#{beanVentas.dominio.horaVenta}"/></td></tr>
+        <tr style="font-size: 14px; font-weight: bolder;"><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.observaciones']} : "/></td>
+            <td><h:outputText value="#{beanVentas.dominio.observaciones}"/></td></tr>
+        <tr style="font-size: 14px; font-weight: bolder;">
+            <td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.showHeader']} : "/></td>
+            <td>
+            <h:outputText value="#{beanVentas.dominio.usuarios.nombre}"/>&nbsp;
+            <h:outputText value="#{beanVentas.dominio.usuarios.app}"/>&nbsp;
+            <h:outputText value="#{beanVentas.dominio.usuarios.apm}"/>
+            </td></tr>
+        <tr style="font-size: 14px; font-weight: bolder; color: RED;"><td align="right">
+        <h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.total_venta']} : "/></td>
+            <td>
+            <h:outputText value="$"/>
+            <h:outputText value="#{beanVentas.dominio.totalPagar}">
+                <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+            </h:outputText>
+            </td></tr>
+        
+        </table>
+        </td>
+        </tr>
+            
+    </table>
+    </fieldset>
+    <fieldset>
+    <table width="100%" align="center">
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 update=":formTableVentas:tablaVentas"
+                                 onclick="widgetShowVentas.hide();"/>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    </p:panel>
+    </p:dialog>
+    </h:form>    
+        
+    <script type="text/javascript">
+    function setIdActualizar(cont) {
+        document.getElementById("formAAShowVentas:contadorVentasActualizar").value = cont;
+    }
+    
+    function validateDataInsert(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetVentas.hide();
+            widgetTablaVentas.selectRow(0);
+            setTimeout("subIdioma()", 3000);
+        }
+    }
+    
+    function subIdioma() {
+        $('#formIdioma').submit();
+    }
+    
+    function validateDataUpdate(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetVentas.hide();
+            setTimeout("subIdioma()", 3000);
+        }
+    }
+    </script>
+    </ui:define>
+</ui:composition>

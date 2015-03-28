@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/02/2014 04:39:40 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="com.javarevolutions.siycp.ejb.entity.Usuarios" table="usuarios" catalog="siycp_jr">
+        <id name="idUsuario" type="java.lang.Long">
+            <column name="id_usuario" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="nombre" length="100" not-null="true" />
+        </property>
+        <property name="app" type="string">
+            <column name="app" length="100" />
+        </property>
+        <property name="apm" type="string">
+            <column name="apm" length="100" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="50" />
+        </property>
+        <property name="celular" type="string">
+            <column name="celular" length="50" />
+        </property>
+        <property name="otroTelefono" type="string">
+            <column name="otro_telefono" length="250" />
+        </property>
+        <property name="direccion" type="string">
+            <column name="direccion" length="250" />
+        </property>
+        <property name="calle" type="string">
+            <column name="calle" length="250" />
+        </property>
+        <property name="numero" type="java.lang.Integer">
+            <column name="numero" />
+        </property>
+        <property name="colonia" type="string">
+            <column name="colonia" length="200" />
+        </property>
+        <property name="codigoPostal" type="java.lang.Integer">
+            <column name="codigo_postal" />
+        </property>
+        <property name="ciudad" type="string">
+            <column name="ciudad" length="100" />
+        </property>
+        <property name="estado" type="string">
+            <column name="estado" length="100" />
+        </property>
+        <property name="tipoPersona" type="string">
+            <column name="tipo_persona" length="1" not-null="true" />
+        </property>
+        <property name="tipoCliente" type="string">
+            <column name="tipo_cliente" length="10" />
+        </property>
+        <set name="horarioEmpleadoses" table="horario_empleados" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_usuario" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.HorarioEmpleados" />
+        </set>
+        <set name="productoses" table="productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_usuario" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.Productos" />
+        </set>
+        <set name="userses" table="users" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_usuario" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.Users" />
+        </set>
+        <set name="pedidoses" table="pedidos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_usuario" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.Pedidos" />
+        </set>
+        <set name="seguimientoPagoses" table="seguimiento_pagos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_usuario" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.SeguimientoPagos" />
+        </set>
+        <set name="proveedoresProductoses" table="proveedores_productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_usuario" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.ProveedoresProductos" />
+        </set>
+    </class>
+</hibernate-mapping>

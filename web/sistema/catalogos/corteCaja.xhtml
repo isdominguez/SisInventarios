@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catCorteCaja')}"/>
+    </f:metadata>
+            
+    <p:tabView effect="clip" effectDuration="normal">
+        <p:ajax event="tabChange" listener="#{beanVentas.changeTabCorteCaja}" 
+                update=":formTableCorteCaja:tablaVentasCorteCaja
+                formCorteCajaXDia:panelCorteXDia
+                formCorteCajaXSemana:panelCorteXSemana" process="@this"/>
+        <p:tab title="#{props['com.jr.props.menu.corte.dia']}">
+        <h:form id="formCorteCajaXDia">
+        <p:panel id="panelCorteXDia">
+            <table width="100%">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td align="right"><h:outputText value="#{props['com.jr.props.menu.cat.ventas.fecha_venta']} : "/></td>
+                                <td><p:outputPanel>
+                                    <p:calendar size="10" required="true" 
+                                                value="#{beanVentas.dominio.fechaVenta}" mode="popup"
+                                                navigator="true" showButtonPanel="true" showOn="button"
+                                                id="corteFechaVenta"
+                                                requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.ventas.fecha_venta']}' #{props['com.jr.is.required']}"/>
+                                        <p:watermark for="corteFechaVenta" value="dd/mm/aa"/>
+                                    </p:outputPanel>
+                                </td>
+                                <td><p:message for="corteFechaVenta" display="icon"/></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p:commandButton id="btnAceptarXDia"
+                                                     onclick="widgetTablaVentasCorteCaja.unselectAllRows();"
+                                    update="panelCorteXDia :formTableCorteCaja:messages 
+                                    :formTableCorteCaja:tablaVentasCorteCaja"
+                                    actionListener="#{beanVentas.getVentasXDia}" 
+                                    value="#{props['com.jr.props.btn.aceptar']}"
+                                    oncomplete="validateData(args);"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br></br><br></br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="right">
+                                    <h:outputText value="#{props['com.jr.props.menu.corte.label.total.venta']} : " style="font-size: 18px; font-weight: bold; color: black;"/>
+                                    <h:outputText value="$" style="font-size: 22px; font-weight: bold; color: red;"/>
+                                    <h:outputText value="#{beanVentas.totalVenta}" style="font-size: 22px; font-weight: bold; color: red;">
+                                        <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                                    </h:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br></br><br></br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="right">
+                                    <h:outputText value="#{props['com.jr.props.menu.corte.label.utilidades']} : " style="font-size: 18px; font-weight: bold; color: black;"/>
+                                    <h:outputText value="$" style="font-size: 22px; font-weight: bold; color: red;"/>
+                                    <h:outputText value="#{beanVentas.utilidades}" style="font-size: 22px; font-weight: bold; color: red;">
+                                        <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                                    </h:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right">
+                        <table>
+                            <tr>
+                                <td>
+                                    <p:bubbleChart id="chartXDia" value="#{beanCorteCaja.graficaCorteXDia}" 
+                                                   xaxisLabel="#{props['com.jr.props.menu.cat.ventas']}" 
+                                                   yaxisLabel="#{props['com.jr.props.corte.compras']}"
+                                    title="#{props['com.jr.props.menu.corte.dia']}" 
+                                    style="width: 650px; height: 250px"
+                                    shadow="false" bubbleGradients="true" bubbleAlpha="0.8"
+                                    rendered="#{beanCorteCaja.showGraficaXDia}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </p:panel>
+        </h:form>
+        </p:tab>
+        
+        <p:tab title="#{props['com.jr.props.menu.corte.semana']}">
+            <h:form id="formCorteCajaXSemana">
+            <p:panel id="panelCorteXSemana">
+            <table width="100%">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td align="right"><h:outputText value="#{props['com.jr.props.menu.corte.fecha_inicio']} : "/></td>
+                                <td><p:outputPanel>
+                                    <p:calendar size="10" required="true" 
+                                                value="#{beanVentas.dominio.fechaInicio}" mode="popup"
+                                                navigator="true" showButtonPanel="true" showOn="button"
+                                                id="corteFechaInicio"
+                                                requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.corte.fecha_inicio']}' #{props['com.jr.is.required']}"/>
+                                        <p:watermark for="corteFechaInicio" value="dd/mm/aa"/>
+                                    </p:outputPanel>
+                                </td>
+                                <td><p:message for="corteFechaInicio" display="icon"/></td>
+                            </tr>
+                            <tr>    
+                                <td align="right"><h:outputText value="#{props['com.jr.props.menu.corte.fecha_fin']} : "/></td>
+                                <td><p:outputPanel>
+                                    <p:calendar size="10" required="true" 
+                                                value="#{beanVentas.dominio.fechaFin}" mode="popup"
+                                                navigator="true" showButtonPanel="true" showOn="button"
+                                                id="corteFechaFin"
+                                                requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.corte.fecha_fin']}' #{props['com.jr.is.required']}"/>
+                                        <p:watermark for="corteFechaFin" value="dd/mm/aa"/>
+                                    </p:outputPanel>
+                                </td>
+                                <td><p:message for="corteFechaFin" display="icon"/></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <p:commandButton id="btnAceptarXSemana"
+                                                     onclick="widgetTablaVentasCorteCaja.unselectAllRows();"
+                                    update="panelCorteXSemana
+                                    :formTableCorteCaja:messages :formTableCorteCaja:tablaVentasCorteCaja"
+                                    actionListener="#{beanVentas.getVentasXSemana}" 
+                                    value="#{props['com.jr.props.btn.aceptar']}"
+                                    oncomplete="validateData(args);"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br></br><br></br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="right">
+                                    <h:outputText value="#{props['com.jr.props.menu.corte.label.total.venta']} : " style="font-size: 18px; font-weight: bold; color: black;"/>
+                                    <h:outputText value="$" style="font-size: 22px; font-weight: bold; color: red;"/>
+                                    <h:outputText value="#{beanVentas.totalVenta}" style="font-size: 22px; font-weight: bold; color: red;">
+                                        <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                                    </h:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br></br><br></br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="right">
+                                    <h:outputText value="#{props['com.jr.props.menu.corte.label.utilidades']} : " style="font-size: 18px; font-weight: bold; color: black;"/>
+                                    <h:outputText value="$" style="font-size: 22px; font-weight: bold; color: red;"/>
+                                    <h:outputText value="#{beanVentas.utilidades}" style="font-size: 22px; font-weight: bold; color: red;">
+                                        <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                                    </h:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right">
+                        <table>
+                            <tr>
+                                <td>
+                                    <p:bubbleChart id="chartXDia" value="#{beanCorteCaja.graficaCorteXDia}" 
+                                                   xaxisLabel="#{props['com.jr.props.menu.cat.ventas']}" 
+                                                   yaxisLabel="#{props['com.jr.props.corte.compras']}"
+                                    title="#{props['com.jr.props.menu.corte.semana']}" 
+                                    style="width: 650px; height: 250px"
+                                    shadow="false" bubbleGradients="true" bubbleAlpha="0.8"
+                                    rendered="#{beanCorteCaja.showGraficaXDia}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    </tr>
+                </table>
+            </p:panel>
+            </h:form>
+        </p:tab>
+    </p:tabView>
+    
+    <h:form id="formTableCorteCaja">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaVentasCorteCaja" var="obj" value="#{beanVentas.listaVentas}"
+                     selectionMode="single" rowKey="#{obj.idVenta}"
+                     transient="true"
+                     style="width: 100%; font-size: 14px;" widgetVar="widgetTablaVentasCorteCaja">
+            
+            <p:ajax event="rowDblselect" listener="#{beanVentas.showVentas}" 
+                    update=":formShowVentas:dialogShowVentas"
+                    oncomplete="widgetShowVentasCorteCaja.show();"/>
+            <p:column style="width: 100px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.id_venta']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.idVenta}"/>
+            </p:column>
+            <p:column style="width: 150px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.fecha_venta']}">
+                        <f:convertDateTime pattern="dd-MMM-yyyy"/>
+                    </h:outputText>
+                </f:facet>
+                <h:outputText value="#{obj.fechaVenta}">
+                    <f:convertDateTime pattern="dd-MMM-yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column style="width: 150px; text-align: center;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.hora_venta']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.horaVenta}"/>
+            </p:column>
+            <p:column style="width: 300px;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.observaciones']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.observaciones}"/>
+            </p:column>
+            <p:column style="width: 200px;">
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.ventas.cliente']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.usuarios.nombre}"/>&nbsp;
+                <h:outputText value="#{obj.usuarios.app}"/>&nbsp;
+                <h:outputText value="#{obj.usuarios.apm}"/>
+            </p:column>
+
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaVentasCorteCaja.unselectAllRows(); 
+                    widgetTablaVentasCorteCaja.selectRow(#{obj.posicion});"
+                    update=":formShowVentas:dialogShowVentas"
+                    actionListener="#{beanVentas.onShowProductoByVenta(obj)}" 
+                    title="#{props['com.jr.props.menu.cat.productos']}"
+                    oncomplete="widgetTablaVentasCorteCaja.unselectAllRows();
+                    widgetTablaVentasCorteCaja.selectRow(#{obj.posicion});
+                    widgetShowVentasCorteCaja.show();">
+                    <img src="#{resources}/images/accessorios.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+    
+    <h:form id="formShowVentas">
+    <p:dialog id="dialogShowVentas" header="#{beanVentas.tituloPantalla} #{beanVentas.dominio.idVenta}" 
+              widgetVar="widgetShowVentasCorteCaja"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+    <p:panel>
+    <fieldset>
+    <table>
+        <tr>
+        <td colspan="2">
+        <div style="width: 600px; height: 300px; overflow: auto;">
+            <p:dataTable id="consultaProductosAdds" var="obj" value="#{beanVentas.listaProductos}"
+                         style="font-size: 14px;">
+                <f:facet name="header">
+                    #{props['com.jr.props.menu.cat.productos.vendidos']}
+                </f:facet>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.one']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.nombre}"/>&nbsp;
+                    <h:outputText value="#{obj.descripcion}"/>
+                </p:column>
+                <p:column style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.inventarios.cantidad']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.cantidad}"
+                                  style="width: 30px; text-align: right;"/>
+                </p:column>
+                <p:column style="text-align: right;">
+                    <f:facet name="header">
+                        <h:outputText value="#{props['com.jr.props.menu.cat.productos.precio_estandar']}"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.costo}"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+        </td>
+        </tr>
+        <tr style="font-size: 14px; font-weight: bolder;"><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.fecha_venta']} : "/></td>
+            <td><h:outputText value="#{beanVentas.dominio.fechaVenta}">
+            <f:convertDateTime pattern="dd-MMM-yyyy"/>
+            </h:outputText></td></tr>
+        <tr style="font-size: 14px; font-weight: bolder;"><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.hora_venta']} : "/></td>
+            <td><h:outputText value="#{beanVentas.dominio.horaVenta}"/></td></tr>
+        <tr style="font-size: 14px; font-weight: bolder;"><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.observaciones']} : "/></td>
+            <td><h:outputText value="#{beanVentas.dominio.observaciones}"/></td></tr>
+        <tr style="font-size: 14px; font-weight: bolder;">
+            <td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.cliente']} : "/></td>
+            <td>
+            <h:outputText value="#{beanVentas.dominio.usuarios.nombre}"/>&nbsp;
+            <h:outputText value="#{beanVentas.dominio.usuarios.app}"/>&nbsp;
+            <h:outputText value="#{beanVentas.dominio.usuarios.apm}"/>
+            </td></tr>
+        <tr style="font-size: 14px; font-weight: bolder; color: RED;"><td align="right">
+        <h:outputLabel value="#{props['com.jr.props.menu.cat.ventas.total_venta']} : "/></td>
+            <td>
+            <h:outputText value="$"/>
+            <h:outputText value="#{beanVentas.dominio.totalPagar}">
+                <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+            </h:outputText>
+            </td></tr>
+    </table>
+    </fieldset>
+    <fieldset>
+    <table width="100%" align="center">
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 onclick="widgetShowVentasCorteCaja.hide();"/>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+    <script type="text/javascript">
+    function validateData(args) {
+        if(args.validationFailed) {
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        }
+    }
+    </script>        
+    </ui:define>
+</ui:composition>

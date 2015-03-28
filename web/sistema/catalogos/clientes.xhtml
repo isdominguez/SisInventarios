@@ -1,0 +1,413 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catClientes')}"/>
+        <f:event type="preRenderView" listener="#{beanClientes.llenaLista}"/>
+    </f:metadata>
+    <h:form id="formTableClientes">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaClientes" var="obj" value="#{beanClientes.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idUsuario}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaClientes"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.dir.home']} #{props['com.jr.props.de']} #{props['com.jr.props.menu.cat.clientes']}
+            </f:facet>
+
+            <p:ajax event="page" oncomplete="checkUn();"/>
+            <p:ajax event="rowDblselect" listener="#{beanClientes.showClientes}" 
+                    update=":formShowClientes:dialogShowClientes"
+                    oncomplete="widgetShowClientes.show();"/>
+
+            <p:column style="width:2%;">
+                <f:facet name="header">
+                    <h:selectBooleanCheckbox onclick="selectUnAll(this);" id="chSelectAll"/>
+                </f:facet>
+                <h:selectBooleanCheckbox value="#{obj.select}"/>
+            </p:column>
+
+            <p:column style="width:6%; text-align: center;">
+                <f:facet name="header">
+                    <p:commandLink onclick="widgetTablaClientes.unselectAllRows();"
+                        actionListener="#{beanClientes.onUpdateInsertRow(null)}" 
+                               update=":formAAShowClientes:dialogClientes"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetClientes.show();">
+                        <img src="#{resources}/images/new.gif" border="0" width="30px" height="30px"/>
+                    </p:commandLink>
+                </f:facet>
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.clientes.nombre']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.nombre}"/>&nbsp;
+                <h:outputText value="#{obj.app}"/>&nbsp;
+                <h:outputText value="#{obj.apm}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.clientes.telefono']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.telefono}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.clientes.celular']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.celular}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.clientes.tipo_cliente']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.tipoCliente}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.clientes.direccion']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.direccion}"/>
+            </p:column>
+            <p:column style="width: 2%">
+                <a href="#" title="#{props['com.jr.props.registro.delete']}" 
+                   onclick="setIdDelete(#{obj.idUsuario},#{obj.cont});confirmDeleteClientes.show();
+                   widgetTablaClientes.unselectAllRows(); 
+                   widgetTablaClientes.selectRow(#{obj.posicion});">
+                    <img src="#{resources}/images/borrar.png" border="0" width="15px" height="15px"/>
+                </a>
+            </p:column>
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaClientes.unselectAllRows(); 
+                   widgetTablaClientes.selectRow(#{obj.posicion});"
+                    actionListener="#{beanClientes.onUpdateInsertRow(obj)}" 
+                               update=":formAAShowClientes:dialogClientes"
+                               title="#{props['com.jr.props.registro.update']}"
+                               oncomplete="setIdActualizar(#{obj.cont});widgetClientes.show();">
+                    <img src="#{resources}/images/update.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td align="left">
+                    <p:commandButton
+                        onclick="return confirmaBorradoAll();"
+                                actionListener="#{beanClientes.deleteAllSelect}"
+                                title="#{props['com.jr.props.registro.delete']}s"
+                                value="#{props['com.jr.props.registro.delete']}s"
+                                icon="ui-icon-close" style="font-size: 12px;"/>
+                        </td>
+                        <td align="right">
+                        <p:commandButton onclick="widgetTablaClientes.unselectAllRows();"
+                                actionListener="#{beanClientes.onUpdateInsertRow(null)}"
+                               update=":formAAShowClientes:dialogClientes"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetClientes.show();"
+                               value="#{props['com.jr.props.registro.new']}"
+                               icon="ui-icon-newwin" style="font-size: 12px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </h:form>
+    
+    
+    <h:form id="formAAShowClientes">
+    <p:dialog id="dialogClientes" header="#{beanClientes.tituloPantalla}" widgetVar="widgetClientes"
+              showEffect="explode" hideEffect="fade"
+              closable="false">
+    <p:panel id="panelClientes">
+    <h:inputHidden id="contadorClientesActualizar" value="#{beanClientes.dominio.cont}"/>
+    <table>
+    <tr>
+    <td>
+        <table>    
+        <tr><td align="right"><h:outputLabel for="txtNombre" value="#{props['com.jr.props.menu.cat.clientes.nombre']} : "/></td>
+        <td><p:inputText id="txtNombre" value="#{beanClientes.dominio.nombre}" required="true" 
+        label="#{props['com.jr.props.menu.cat.clientes.nombre']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.nombre']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtNombre" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtApp" value="#{props['com.jr.props.menu.cat.clientes.app']} : "/></td>
+        <td><p:inputText id="txtApp" value="#{beanClientes.dominio.app}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.app']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.app']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtApp" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtApm" value="#{props['com.jr.props.menu.cat.clientes.apm']} : "/></td>
+        <td><p:inputText id="txtApm" value="#{beanClientes.dominio.apm}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.apm']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.apm']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtApm" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtTelefono" value="#{props['com.jr.props.menu.cat.clientes.telefono']} : "/></td>
+        <td><p:inputText id="txtTelefono" value="#{beanClientes.dominio.telefono}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.telefono']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.telefono']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtTelefono" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCelular" value="#{props['com.jr.props.menu.cat.clientes.celular']} : "/></td>
+        <td><p:inputText id="txtCelular" value="#{beanClientes.dominio.celular}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.celular']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.celular']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtCelular" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtOtroTelefono" value="#{props['com.jr.props.menu.cat.clientes.otro_telefono']} : "/></td>
+        <td><p:inputText id="txtOtroTelefono" value="#{beanClientes.dominio.otroTelefono}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.otro_telefono']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.otro_telefono']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtOtroTelefono" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtDireccion" value="#{props['com.jr.props.menu.cat.clientes.direccion']} : "/></td>
+        <td><p:inputText id="txtDireccion" value="#{beanClientes.dominio.direccion}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.direccion']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.direccion']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtDireccion" display="icon"/></td></tr>
+    </table>
+    </td>
+    
+    <td>
+    <table>
+        <tr><td align="right"><h:outputLabel for="txtCalle" value="#{props['com.jr.props.menu.cat.clientes.calle']} : "/></td>
+        <td><p:inputText id="txtCalle" value="#{beanClientes.dominio.calle}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.calle']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.calle']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtCalle" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtNumero" value="#{props['com.jr.props.menu.cat.clientes.numero']} : "/></td>
+        <td><p:inputText id="txtNumero" value="#{beanClientes.dominio.numero}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.numero']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.numero']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtNumero" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtColonia" value="#{props['com.jr.props.menu.cat.clientes.colonia']} : "/></td>
+        <td><p:inputText id="txtColonia" value="#{beanClientes.dominio.colonia}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.colonia']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.colonia']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtColonia" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCodigoPostal" value="#{props['com.jr.props.menu.cat.clientes.codigo_postal']} : "/></td>
+        <td><p:inputText id="txtCodigoPostal" value="#{beanClientes.dominio.codigoPostal}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.codigo_postal']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.codigo_postal']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtCodigoPostal" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCiudad" value="#{props['com.jr.props.menu.cat.clientes.ciudad']} : "/></td>
+        <td><p:inputText id="txtCiudad" value="#{beanClientes.dominio.ciudad}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.ciudad']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.ciudad']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtCiudad" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtEstado" value="#{props['com.jr.props.menu.cat.clientes.estado']} : "/></td>
+        <td><p:inputText id="txtEstado" value="#{beanClientes.dominio.estado}" required="false" 
+        label="#{props['com.jr.props.menu.cat.clientes.estado']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.estado']}' #{props['com.jr.is.required']}"
+        disabled="#{beanClientes.dominio.disabled}"/></td>
+        <td><p:message for="txtEstado" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtTipoCliente" value="#{props['com.jr.props.menu.cat.clientes.tipo_cliente']} : "/></td>
+        <td><p:selectOneMenu id="txtTipoCliente" value="#{beanClientes.dominio.tipoCliente}"
+                        style="width:100%" required="true"
+                        label="#{props['com.jr.props.menu.cat.clientes.tipo_cliente']}" 
+                        requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.clientes.tipo_cliente']}' #{props['com.jr.is.required']}"
+                        disabled="#{beanUsers.dominio.disabled}">
+            <f:selectItem itemLabel="General" itemValue="General"/>
+            <f:selectItem itemLabel="Intermedio" itemValue="Intermedio"/>
+            <f:selectItem itemLabel="Especial" itemValue="Especial"/>
+        </p:selectOneMenu></td>
+        <td><p:message for="txtTipoCliente" display="icon"/></td></tr>
+    </table>
+    </td>
+    </tr>
+    
+        <tr>
+            <td align="right">
+                <p:commandButton id="btnCancelar" value="#{props['com.jr.props.btn.cancelar']}"
+                                 update=":formTableClientes:tablaClientes"
+                                 immediate="true"
+                                 onclick="widgetClientes.hide();">
+                    <p:resetInput target="panelClientes"/>
+                </p:commandButton>
+            </td>
+            <td align="center">
+                <p:commandButton id="btnAceptar"
+                update="panelClientes :formTableClientes:messages :formTableClientes:tablaClientes"
+                actionListener="#{beanClientes.save}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaClientes.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanClientes.showSave}"/>
+                <p:commandButton id="btnActualizar"
+                update="panelClientes :formTableClientes:messages :formTableClientes:tablaClientes"
+                actionListener="#{beanClientes.updateRow}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaClientes.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanClientes.showUpdate}"/>
+            </td>
+        </tr>
+    </table>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <h:form id="formShowClientes">
+    <p:dialog id="dialogShowClientes" header="#{beanClientes.tituloPantalla}" widgetVar="widgetShowClientes"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+    <p:panel>
+    <fieldset>
+    <table>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.nombre']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.nombre}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.app']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.app}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.apm']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.apm}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.telefono']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.telefono}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.celular']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.celular}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.otro_telefono']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.otroTelefono}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.direccion']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.direccion}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.calle']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.calle}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.numero']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.numero}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.colonia']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.colonia}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.codigo_postal']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.codigoPostal}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.ciudad']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.ciudad}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.estado']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.estado}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.clientes.tipo_cliente']} : "/></td>
+            <td><h:outputText value="#{beanClientes.dominio.tipoCliente}"/></td></tr>
+    </table>
+    </fieldset>
+    <fieldset>
+    <table width="100%" align="center">
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 update=":formTableClientes:tablaClientes"
+                                 onclick="widgetShowClientes.hide();"/>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <p:confirmDialog id="confirmarDelete" showEffect="fade" hideEffect="clip" appendToBody="true"
+                message="¿#{props['com.jr.props.titulo.confirm.delete']}?"
+                header="#{props['com.jr.props.registro.delete']}" severity="alert" widgetVar="confirmDeleteClientes">
+        <h:form id="formConfirmDelete">
+        <center>
+        <p:commandButton id="btnBorrarSI" value="#{props['com.jr.props.btn.si']}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                        actionListener="#{beanClientes.delete}" 
+                        update=":formTableClientes:tablaClientes :formTableClientes:messages"
+                        oncomplete="checkUn(); validateDelete(args);"/>
+        <h:inputHidden id="idClientesDelete" value="#{beanClientes.dominio.idUsuario}"/>
+        <h:inputHidden id="contadorClientesDelete" value="#{beanClientes.dominio.cont}"/>
+        <p:commandButton id="btnBorrarNO" value="#{props['com.jr.props.btn.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                        onclick="confirmDeleteClientes.hide();"/>
+        </center>
+        </h:form>
+    </p:confirmDialog>
+        
+    <script type="text/javascript">
+    function checkUn() {
+        var obj = document.getElementById("formTableClientes:tablaClientes:chSelectAll");
+        obj.checked = false;
+    }   
+    
+    function setIdActualizar(cont) {
+        document.getElementById("formAAShowClientes:contadorClientesActualizar").value = cont;
+    }
+    
+    function setIdDelete(id, cont) {
+        document.getElementById("formConfirmDelete:idClientesDelete").value = id;
+        document.getElementById("formConfirmDelete:contadorClientesDelete").value = cont;
+    }
+    
+    function validateDelete(args) {
+        if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            confirmDeleteClientes.hide();
+        }
+    }
+    
+    function confirmaBorradoAll() {
+        var obj = document.getElementById("formTableClientes:tablaClientes:chSelectAll");
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        var checado = false;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                    if(obj.id != element.id) {
+                        if(element.checked) {
+                            checado = true;
+                            break;
+                        }
+                    }
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+        if(checado) {
+            var response = confirm("¿#{props['com.jr.props.titulo.confirm.delete']}?");
+            if(response) {
+                obj.checked = false;
+                checkUn();
+            }
+            return response;
+        } else {
+            alert("#{props['com.jr.props.msg.registro.deleteAll.vacio']}");
+            return false;
+        }
+        return false;
+    }
+    
+    function deleteAllMsg(args) {
+        alert(args.errorTransaction);
+    }
+    
+    function validateData(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetClientes.hide();
+        }
+    }
+    
+    function selectUnAll(obj) {
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                     element.checked = obj.checked;
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+    }
+    </script>
+    </ui:define>
+</ui:composition>

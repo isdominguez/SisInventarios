@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+    
+    <context:component-scan base-package="com.javarevolutions.siycp"/>
+    <context:annotation-config/>
+    
+    <!-- With this line, we add support to web service client for use Autowired -->
+    <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
+        <property name="baseAddress" value="http://localhost:8089/SistemaInventarios"/>
+    </bean>
+    
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="dsSIyCP"/>
+    </bean>
+    
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+            </props>
+        </property>
+
+        <property name="mappingResources">
+            <list>
+                <value>/com/javarevolutions/siycp/ejb/entity/HorarioEmpleados.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Users.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Accesoriosxproducto.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/VentasProductos.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/PedidosProductos.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Pagos.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Productos.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Inventarios.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Usuarios.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/SeguimientoPagos.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Ventas.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/Pedidos.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/TiposMedidas.hbm.xml</value>
+                <value>/com/javarevolutions/siycp/ejb/entity/ProveedoresProductos.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="transactionManager"  class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- DAOS -->
+    <bean id="daoAccesoriosxproducto" class="com.javarevolutions.siycp.ejb.dao.DAOImplAccesoriosxproducto">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoInventarios" class="com.javarevolutions.siycp.ejb.dao.DAOImplInventarios">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoPedidos" class="com.javarevolutions.siycp.ejb.dao.DAOImplPedidos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoPedidosProductos" class="com.javarevolutions.siycp.ejb.dao.DAOImplPedidosProductos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoProductos" class="com.javarevolutions.siycp.ejb.dao.DAOImplProductos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoProveedoresProductos" class="com.javarevolutions.siycp.ejb.dao.DAOImplProveedoresProductos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoTiposMedidas" class="com.javarevolutions.siycp.ejb.dao.DAOImplTiposMedidas">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoUsers" class="com.javarevolutions.siycp.ejb.dao.DAOImplUsers">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoUsuarios" class="com.javarevolutions.siycp.ejb.dao.DAOImplUsuarios">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoPagos" class="com.javarevolutions.siycp.ejb.dao.DAOImplPagos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoSeguimientoPagos" class="com.javarevolutions.siycp.ejb.dao.DAOImplSeguimientoPagos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoVentas" class="com.javarevolutions.siycp.ejb.dao.DAOImplVentas">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoVentasProductos" class="com.javarevolutions.siycp.ejb.dao.DAOImplVentasProductos">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="daoHorarioEmpleados" class="com.javarevolutions.siycp.ejb.dao.DAOImplHorarioEmpleados">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- Servicios -->
+    <bean id="serviceAccesoriosxproducto" class="com.javarevolutions.siycp.service.ServiceAccesoriosxproducto"></bean>
+    <bean id="serviceInventarios" class="com.javarevolutions.siycp.service.ServiceInventarios"></bean>
+    <bean id="servicePedidos" class="com.javarevolutions.siycp.service.ServicePedidos"></bean>
+    <bean id="servicePedidosProductos" class="com.javarevolutions.siycp.service.ServicePedidosProductos"></bean>
+    <bean id="serviceProductos" class="com.javarevolutions.siycp.service.ServiceProductos"></bean>
+    <bean id="serviceProveedoresProductos" class="com.javarevolutions.siycp.service.ServiceProveedoresProductos"></bean>
+    <bean id="serviceTiposMedidas" class="com.javarevolutions.siycp.service.ServiceTiposMedidas"></bean>
+    <bean id="serviceUsers" class="com.javarevolutions.siycp.service.ServiceUsers"></bean>
+    <bean id="serviceUsuarios" class="com.javarevolutions.siycp.service.ServiceUsuarios"></bean>
+    <bean id="servicePagos" class="com.javarevolutions.siycp.service.ServicePagos"></bean>
+    <bean id="serviceSeguimientoPagos" class="com.javarevolutions.siycp.service.ServiceSeguimientoPagos"></bean>
+    <bean id="serviceVentas" class="com.javarevolutions.siycp.service.ServiceVentas"></bean>
+    <bean id="serviceVentasProductos" class="com.javarevolutions.siycp.service.ServiceVentasProductos"></bean>
+    <bean id="serviceHorarioEmpleados" class="com.javarevolutions.siycp.service.ServiceHorarioEmpleados"></bean>
+    <!-- Business -->
+    <bean id="businessAccesoriosxproducto" class="com.javarevolutions.siycp.ejb.business.BusinessAccesoriosxproducto"></bean>
+    <bean id="businessInventarios" class="com.javarevolutions.siycp.ejb.business.BusinessInventarios"></bean>
+    <bean id="businessPedidos" class="com.javarevolutions.siycp.ejb.business.BusinessPedidos"></bean>
+    <bean id="businessPedidosProductos" class="com.javarevolutions.siycp.ejb.business.BusinessPedidosProductos"></bean>
+    <bean id="businessProductos" class="com.javarevolutions.siycp.ejb.business.BusinessProductos"></bean>
+    <bean id="businessProveedoresProductos" class="com.javarevolutions.siycp.ejb.business.BusinessProveedoresProductos"></bean>
+    <bean id="businessTiposMedidas" class="com.javarevolutions.siycp.ejb.business.BusinessTiposMedidas"></bean>
+    <bean id="businessUsers" class="com.javarevolutions.siycp.ejb.business.BusinessUsers"></bean>
+    <bean id="businessUsuarios" class="com.javarevolutions.siycp.ejb.business.BusinessUsuarios"></bean>
+    <bean id="businessPagos" class="com.javarevolutions.siycp.ejb.business.BusinessPagos"></bean>
+    <bean id="businessSeguimientoPagos" class="com.javarevolutions.siycp.ejb.business.BusinessSeguimientoPagos"></bean>
+    <bean id="businessVentas" class="com.javarevolutions.siycp.ejb.business.BusinessVentas"></bean>
+    <bean id="businessVentasProductos" class="com.javarevolutions.siycp.ejb.business.BusinessVentasProductos"></bean>
+    <bean id="businessHorarioEmpleados" class="com.javarevolutions.siycp.ejb.business.BusinessHorarioEmpleados"></bean>
+    <!-- EJB'S-->
+    <bean id="ejbAccesoriosxproducto" class="com.javarevolutions.siycp.ejb.session.SessionBeanAccesoriosxproducto"></bean>
+    <bean id="ejbInventarios" class="com.javarevolutions.siycp.ejb.session.SessionBeanInventarios"></bean>
+    <bean id="ejbPedidos" class="com.javarevolutions.siycp.ejb.session.SessionBeanPedidos"></bean>
+    <bean id="ejbPedidosProductos" class="com.javarevolutions.siycp.ejb.session.SessionBeanPedidosProductos"></bean>
+    <bean id="ejbProductos" class="com.javarevolutions.siycp.ejb.session.SessionBeanProductos"></bean>
+    <bean id="ejbProveedoresProductos" class="com.javarevolutions.siycp.ejb.session.SessionBeanProveedoresProductos"></bean>
+    <bean id="ejbTiposMedidas" class="com.javarevolutions.siycp.ejb.session.SessionBeanTiposMedidas"></bean>
+    <bean id="ejbUsers" class="com.javarevolutions.siycp.ejb.session.SessionBeanUsers"></bean>
+    <bean id="ejbUsuarios" class="com.javarevolutions.siycp.ejb.session.SessionBeanUsuarios"></bean>
+    <bean id="ejbPagos" class="com.javarevolutions.siycp.ejb.session.SessionBeanPagos"></bean>
+    <bean id="ejbSeguimientoPagos" class="com.javarevolutions.siycp.ejb.session.SessionBeanSeguimientoPagos"></bean>
+    <bean id="ejbVentas" class="com.javarevolutions.siycp.ejb.session.SessionBeanVentas"></bean>
+    <bean id="ejbVentasProductos" class="com.javarevolutions.siycp.ejb.session.SessionBeanVentasProductos"></bean>
+    <bean id="ejbHorarioEmpleados" class="com.javarevolutions.siycp.ejb.session.SessionBeanHorarioEmpleados"></bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

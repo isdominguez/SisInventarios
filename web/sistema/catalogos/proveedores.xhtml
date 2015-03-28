@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catProveedores')}"/>
+        <f:event type="preRenderView" listener="#{beanProveedores.llenaLista}"/>
+    </f:metadata>
+    <h:form id="formTableProveedores">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaProveedores" var="obj" value="#{beanProveedores.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idUsuario}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaProveedores"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.dir.home']} #{props['com.jr.props.de']} #{props['com.jr.props.menu.cat.proveedores']}
+            </f:facet>
+
+            <p:ajax event="page" oncomplete="checkUn();"/>
+            <p:ajax event="rowDblselect" listener="#{beanProveedores.showProveedores}" 
+                    update=":formShowProveedores:dialogShowProveedores"
+                    oncomplete="widgetShowProveedores.show();"/>
+
+            <p:column style="width:2%;">
+                <f:facet name="header">
+                    <h:selectBooleanCheckbox onclick="selectUnAll(this);" id="chSelectAll"/>
+                </f:facet>
+                <h:selectBooleanCheckbox value="#{obj.select}"/>
+            </p:column>
+
+            <p:column style="width:6%; text-align: center;">
+                <f:facet name="header">
+                    <p:commandLink onclick="widgetTablaProveedores.unselectAllRows();"
+                        actionListener="#{beanProveedores.onUpdateInsertRow(null)}" 
+                               update=":formAAShowProveedores:dialogProveedores"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetProveedores.show();">
+                        <img src="#{resources}/images/new.gif" border="0" width="30px" height="30px"/>
+                    </p:commandLink>
+                </f:facet>
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.proveedor_one']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.nombre}"/>&nbsp;
+                <h:outputText value="#{obj.app}"/>&nbsp;
+                <h:outputText value="#{obj.apm}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.proveedores.telefono']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.telefono}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.proveedores.celular']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.celular}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.proveedores.otro_telefono']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.otroTelefono}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.proveedores.direccion']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.direccion}"/>
+            </p:column>
+            <p:column style="width: 2%">
+                <a href="#" title="#{props['com.jr.props.registro.delete']}" 
+                   onclick="setIdDelete('#{obj.idUsuario}','#{obj.cont}');confirmDeleteProveedores.show();
+                   widgetTablaProveedores.unselectAllRows(); 
+                   widgetTablaProveedores.selectRow(#{obj.posicion});">
+                    <img src="#{resources}/images/borrar.png" border="0" width="15px" height="15px"/>
+                </a>
+            </p:column>
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaProveedores.unselectAllRows(); 
+                   widgetTablaProveedores.selectRow(#{obj.posicion});"
+                    actionListener="#{beanProveedores.onUpdateInsertRow(obj)}" 
+                               update=":formAAShowProveedores:dialogProveedores"
+                               title="#{props['com.jr.props.registro.update']}"
+                               oncomplete="setIdActualizar(#{obj.cont});widgetProveedores.show();">
+                    <img src="#{resources}/images/update.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td align="left">
+                    <p:commandButton
+                        onclick="return confirmaBorradoAll();"
+                                actionListener="#{beanProveedores.deleteAllSelect}"
+                                title="#{props['com.jr.props.registro.delete']}s"
+                                value="#{props['com.jr.props.registro.delete']}s"
+                                icon="ui-icon-close" style="font-size: 12px;"/>
+                        </td>
+                        <td align="right">
+                        <p:commandButton onclick="widgetTablaProveedores.unselectAllRows();"
+                                actionListener="#{beanProveedores.onUpdateInsertRow(null)}"
+                               update=":formAAShowProveedores:dialogProveedores"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetProveedores.show();"
+                               value="#{props['com.jr.props.registro.new']}"
+                               icon="ui-icon-newwin" style="font-size: 12px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </h:form>
+    
+    
+    <h:form id="formAAShowProveedores">
+    <p:dialog id="dialogProveedores" header="#{beanProveedores.tituloPantalla}" widgetVar="widgetProveedores"
+              showEffect="explode" hideEffect="fade"
+              closable="false">
+    <p:panel id="panelProveedores">
+    <h:inputHidden id="contadorProveedoresActualizar" value="#{beanProveedores.dominio.cont}"/>
+    <table>
+        <tr><td align="right"><h:outputLabel for="txtNombre" value="#{props['com.jr.props.menu.cat.proveedores.nombre']} : "/></td>
+        <td><p:inputText id="txtNombre" value="#{beanProveedores.dominio.nombre}" required="true" 
+        label="#{props['com.jr.props.menu.cat.proveedores.nombre']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.nombre']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtNombre" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtApp" value="#{props['com.jr.props.menu.cat.proveedores.app']} : "/></td>
+        <td><p:inputText id="txtApp" value="#{beanProveedores.dominio.app}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.app']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.app']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtApp" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtApm" value="#{props['com.jr.props.menu.cat.proveedores.apm']} : "/></td>
+        <td><p:inputText id="txtApm" value="#{beanProveedores.dominio.apm}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.apm']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.apm']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtApm" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtTelefono" value="#{props['com.jr.props.menu.cat.proveedores.telefono']} : "/></td>
+        <td><p:inputText id="txtTelefono" value="#{beanProveedores.dominio.telefono}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.telefono']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.telefono']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtTelefono" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCelular" value="#{props['com.jr.props.menu.cat.proveedores.celular']} : "/></td>
+        <td><p:inputText id="txtCelular" value="#{beanProveedores.dominio.celular}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.celular']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.celular']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtCelular" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtOtroTelefono" value="#{props['com.jr.props.menu.cat.proveedores.otro_telefono']} : "/></td>
+        <td><p:inputText id="txtOtroTelefono" value="#{beanProveedores.dominio.otroTelefono}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.otro_telefono']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.otro_telefono']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtOtroTelefono" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtDireccion" value="#{props['com.jr.props.menu.cat.proveedores.direccion']} : "/></td>
+        <td><p:inputText id="txtDireccion" value="#{beanProveedores.dominio.direccion}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.direccion']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.direccion']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtDireccion" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCalle" value="#{props['com.jr.props.menu.cat.proveedores.calle']} : "/></td>
+        <td><p:inputText id="txtCalle" value="#{beanProveedores.dominio.calle}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.calle']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.calle']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtCalle" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtNumero" value="#{props['com.jr.props.menu.cat.proveedores.numero']} : "/></td>
+        <td><p:inputText id="txtNumero" value="#{beanProveedores.dominio.numero}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.numero']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.numero']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtNumero" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtColonia" value="#{props['com.jr.props.menu.cat.proveedores.colonia']} : "/></td>
+        <td><p:inputText id="txtColonia" value="#{beanProveedores.dominio.colonia}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.colonia']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.colonia']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtColonia" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCodigoPostal" value="#{props['com.jr.props.menu.cat.proveedores.codigo_postal']} : "/></td>
+        <td><p:inputText id="txtCodigoPostal" value="#{beanProveedores.dominio.codigoPostal}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.codigo_postal']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.codigo_postal']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtCodigoPostal" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCiudad" value="#{props['com.jr.props.menu.cat.proveedores.ciudad']} : "/></td>
+        <td><p:inputText id="txtCiudad" value="#{beanProveedores.dominio.ciudad}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.ciudad']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.ciudad']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtCiudad" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtEstado" value="#{props['com.jr.props.menu.cat.proveedores.estado']} : "/></td>
+        <td><p:inputText id="txtEstado" value="#{beanProveedores.dominio.estado}" required="false" 
+        label="#{props['com.jr.props.menu.cat.proveedores.estado']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.proveedores.estado']}' #{props['com.jr.is.required']}"
+        disabled="#{beanProveedores.dominio.disabled}"/></td>
+        <td><p:message for="txtEstado" display="icon"/></td></tr>
+        <tr>
+            <td align="right">
+                <p:commandButton id="btnCancelar" value="#{props['com.jr.props.btn.cancelar']}"
+                                 update=":formTableProveedores:tablaProveedores"
+                                 immediate="true"
+                                 onclick="widgetProveedores.hide();">
+                    <p:resetInput target="panelProveedores"/>
+                </p:commandButton>
+            </td>
+            <td align="center">
+                <p:commandButton id="btnAceptar"
+                update="panelProveedores :formTableProveedores:messages :formTableProveedores:tablaProveedores"
+                actionListener="#{beanProveedores.save}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaProveedores.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanProveedores.showSave}"/>
+                <p:commandButton id="btnActualizar"
+                update="panelProveedores :formTableProveedores:messages :formTableProveedores:tablaProveedores"
+                actionListener="#{beanProveedores.updateRow}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaProveedores.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanProveedores.showUpdate}"/>
+            </td>
+        </tr>
+    </table>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <h:form id="formShowProveedores">
+    <p:dialog id="dialogShowProveedores" header="#{beanProveedores.tituloPantalla}" widgetVar="widgetShowProveedores"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+    <p:panel>
+    <fieldset>
+    <table>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.nombre']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.nombre}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.app']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.app}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.apm']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.apm}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.telefono']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.telefono}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.celular']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.celular}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.otro_telefono']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.otroTelefono}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.direccion']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.direccion}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.calle']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.calle}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.numero']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.numero}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.colonia']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.colonia}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.codigo_postal']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.codigoPostal}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.ciudad']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.ciudad}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedores.estado']} : "/></td>
+            <td><h:outputText value="#{beanProveedores.dominio.estado}"/></td></tr>
+    </table>
+    </fieldset>
+    <fieldset>
+    <table width="100%" align="center">
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 update=":formTableProveedores:tablaProveedores"
+                                 onclick="widgetShowProveedores.hide();"/>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <p:confirmDialog id="confirmarDelete" showEffect="fade" hideEffect="clip" appendToBody="true"
+                message="¿#{props['com.jr.props.titulo.confirm.delete']}?"
+                header="#{props['com.jr.props.registro.delete']}" severity="alert" widgetVar="confirmDeleteProveedores">
+        <h:form id="formConfirmDelete">
+        <center>
+        <p:commandButton id="btnBorrarSI" value="#{props['com.jr.props.btn.si']}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                        actionListener="#{beanProveedores.delete}" 
+                        update=":formTableProveedores:tablaProveedores :formTableProveedores:messages"
+                        oncomplete="checkUn(); validateDelete(args);"/>
+        <h:inputHidden id="idProveedoresDelete" value="#{beanProveedores.dominio.idUsuario}"/>
+        <h:inputHidden id="contadorProveedoresDelete" value="#{beanProveedores.dominio.cont}"/>
+        <p:commandButton id="btnBorrarNO" value="#{props['com.jr.props.btn.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                        onclick="confirmDeleteProveedores.hide();"/>
+        </center>
+        </h:form>
+    </p:confirmDialog>
+        
+    <script type="text/javascript">
+    function checkUn() {
+        var obj = document.getElementById("formTableProveedores:tablaProveedores:chSelectAll");
+        obj.checked = false;
+    }   
+    
+    function setIdActualizar(cont) {
+        document.getElementById("formAAShowProveedores:contadorProveedoresActualizar").value = cont;
+    }
+    
+    function setIdDelete(id, cont) {
+        document.getElementById("formConfirmDelete:idProveedoresDelete").value = id;
+        document.getElementById("formConfirmDelete:contadorProveedoresDelete").value = cont;
+    }
+    
+    function validateDelete(args) {
+        if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            confirmDeleteProveedores.hide();
+        }
+    }
+    
+    function confirmaBorradoAll() {
+        var obj = document.getElementById("formTableProveedores:tablaProveedores:chSelectAll");
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        var checado = false;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                    if(obj.id != element.id) {
+                        if(element.checked) {
+                            checado = true;
+                            break;
+                        }
+                    }
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+        if(checado) {
+            var response = confirm("¿#{props['com.jr.props.titulo.confirm.delete']}?");
+            if(response) {
+                obj.checked = false;
+                checkUn();
+            }
+            return response;
+        } else {
+            alert("#{props['com.jr.props.msg.registro.deleteAll.vacio']}");
+            return false;
+        }
+        return false;
+    }
+    
+    function deleteAllMsg(args) {
+        alert(args.errorTransaction);
+    }
+    
+    function validateData(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetProveedores.hide();
+        }
+    }
+    
+    function selectUnAll(obj) {
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                     element.checked = obj.checked;
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+    }
+    </script>
+    </ui:define>
+</ui:composition>

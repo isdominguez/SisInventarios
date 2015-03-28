@@ -1,0 +1,915 @@
+/**
+ * Nombre de Aplicacion: Sistema de Inventarios y Control de Pedidos
+ * Nombre de archivo: jr.css
+ * Fecha de creacion : Noviembre, 2013
+ * @author : Sergio Alberto Cortés Rios
+ * @version 1.0
+ *
+ * Bitácora de modificaciones:
+ * CR/Defecto 		Fecha 			Autor 			Descripción del cambio
+ *---------------------------------------------------------------------------
+ */
+@CHARSET "UTF-8";
+
+.Titulo {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	Color: #FFFFFF;
+	background-color: #1287CD;
+}
+
+.Titulo2 {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	Color: #FFFFFF;
+	background-color: #183966;
+}
+
+.Titulo3 {
+	Font-size: 11px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Color: #666666;
+	background-color: #CFDBE6;
+}
+ 
+
+.Indicaciones {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #00457C;
+}
+
+.DescrCampo {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Bolder;
+	Color: #808080;
+}
+
+.TextoCampo {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #808080;
+	height: 25px
+}
+
+.TextoCampoConFondo {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #00457C;
+	background-color: #EFFBFB;
+	height: 25px
+}
+
+.HeaderTabla {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #FFFFFF;
+	background-color: #0A62C4;
+}
+
+.HeaderTabla2 {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	Color: #FFF;
+	background-color: #1287CD;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.HeaderTablaHoja {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	Color: #666;
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+Body {
+	background-color: transparent;
+	margin: 0px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+.SubTit {
+	color: #000099;
+	font-size: 14px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.SubTit2 {
+	color: #000099;
+	font-size: 12px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: left;
+}
+
+.SubTit3 {
+	background-color: #FFFFFF;
+	font-size: 12px;
+	font-weight: normal;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.etiquetas {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.etiquetasHojaInconsistencias {
+	font-family: Tahoma, Arial, Helvetica;
+	font-size: 8px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.etiquetasHojaInconsistencias {
+	font-family: Tahoma, Arial, Helvetica;
+	font-size: 8px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+ .etiquetasHojaInconsistenciasOtro {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.etiquetasCe {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: right;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.etiquetas32D {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	letter-spacing: .5px;
+}
+
+.etiquetas2 {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #000000;
+	text-decoration: none;
+	text-align: center;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.etiquetasConFondo {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+	background-color: #CFDBE6;
+}
+
+.etiquetasLogin {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #FFF;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.FondoTabla {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #808080;
+	text-decoration: none;
+	text-align: right;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.FondoTabla2 {
+	background-color: #BDBDBD;
+}
+
+.tituloDescripcionGrid {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.tituloLista {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #ffffff;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+	background-color: #1287CD;
+}
+
+.tituloLista2 {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #ffffff;
+	text-decoration: none;
+	text-align: center;
+	padding-left: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+	background-color: #1287CD;
+}
+
+.textoComboLista {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-stretch: ultra-condensed;
+	font-size: 9px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 5px;
+	letter-spacing: .5px;
+}
+
+.CuadroTextoTxt {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 5px;
+	letter-spacing: .5px;
+}
+
+.CuadroTextoOcl {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: center;
+	border: 0px solid transparent;
+}
+
+.leyendas {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: blue;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.footerTabla {
+	Font-size: 11px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #FFFFFF;
+	background-color: #666666;
+}
+
+.textoFooter {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 11px;
+	font-weight: Normal;
+	color: #666666;
+}
+
+.textFooterBold {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 10px;
+	font-weight: bold;
+	color: #808080;
+}
+
+.mt {
+	width: 617px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+.boton {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+}
+
+.tablasDefensa {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 12px;
+	font-weight: normal;
+	background-color: #1287CD;
+	color: #fff;
+}
+
+.datosRequeridos {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 10px;
+	font-weight: bold;
+	color: #DF0101;
+}
+
+.tablaUbicacion {
+	position: absolute;
+	background-color: #045FB4;
+}
+
+.datos1 {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666;
+	text-decoration: none;
+	cursor: default;
+	text-align: left;
+}
+
+.datos2 {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666;
+	text-decoration: none;
+	cursor: default;
+	text-align: left;
+	background-color: #CFDBE6;
+}
+
+.datosHojaFis {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #FFF;
+	text-decoration: none;
+	cursor: default;
+	text-align: left;
+}
+
+.etiquetasHojaInconsistenciasMonto {
+	font-family: Tahoma, Arial, Helvetica;
+	font-size: 8px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: right;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+
+.etiquetasHojaInconsistenciasMontoOtro {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666;
+	text-decoration: none;
+	text-align: right;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: .5px;
+}
+.campoReporteCif {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 5px;
+	letter-spacing: .5px;
+	width: 190px;
+}
+
+.tablaGeneral {
+	width: 821px;
+}
+
+.scroll {
+	width: 820px;
+	overflow: auto;
+}
+
+.TituloPrincipal {
+	Font-size: 16px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	Color: #000000;
+}
+
+.alerta {
+	color: #F00;
+	font-size: 9px;
+	text-align: left;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.alertaError {
+	color: #D40000;
+	font-size: 11px;
+	text-align: left;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	float: left;
+	height: auto;
+	position: relative;
+	width: 100%;
+	z-index: 0;
+	min-height: 25px;
+}
+
+.mensajeErr {
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	color: #F00;
+	padding-top: 7px;
+	padding-left: 55px;
+	background-color: #FFFFFF;
+}
+
+.displayTableFrame {
+	background-color: white;
+	overflow-x: scroll;
+	height: 320px;
+	width: 100%;
+}
+
+.tablaInconsistencias {
+	width: 855px;
+	background-color: #00457C;
+}
+
+.imagenFondo {
+	top: 50px;
+	position: relative;
+}
+
+.etiquetaHeaderBold {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 12px;
+	font-weight: bold;
+	color: #FFF;
+}
+
+.textoHeaderBold {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 12px;
+	font-weight: bold;
+	color: #FFF;
+}
+
+.textoHeader {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 12px;
+	font-weight: Normal;
+	color: #FFF;
+}
+
+.camposCalculados {
+	background-color: #E6E6E6;
+}
+
+.botonReglas {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	width: 300px;
+}
+
+.sizeWords {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.formatoTextoHora {
+	border-width: 0px;
+	color: #808080;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	text-align: center;
+	font-weight: Normal;
+}
+
+.controvertidos {
+	word-wrap: break-word;
+	word-break: break-all;
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Color: #00457C;
+	height: 25px
+}
+
+.textUbicacion {
+	background-image: url(../images/barraAzul.jpg);
+	background-repeat: no-repeat;
+	background-color: #FFFFFF;
+	height: 10px;
+}
+
+.textFuentes {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 12px;
+	font-weight: normal;
+	background-color: #1287CD;
+	color: #fff;
+}
+
+/*botones de acciones*/
+.estiloBoton {
+	background: url(../images/boton_naranja_peq.png);
+	background-repeat: no-repeat;
+	text-align: center;
+	position: relative;
+	float: center;
+	text-decoration: none;
+	width: 110px;
+	height: 25px;
+	font-weight: bold;
+	color: #FFFFFF !important;
+	border: none !important;
+	cursor: pointer;
+}
+
+.estiloBotonHoja {
+	background: url(../images/botonCedula.png);
+	background-repeat: no-repeat;
+	text-align: center;
+	position: relative;
+	float: center;
+	text-decoration: none;
+	width: 180px;
+	height: 33px;
+	font-weight: bold;
+	color: #FFFFFF !important;
+	border: none !important;
+	cursor: pointer;
+	font-size: 13px !important;
+	margin: 3px 10px 5px 5px;
+}
+
+.estiloBotonEvaIni {
+	background: url(../images/botonAccionLargo.png);
+	background-repeat: no-repeat;
+	text-align: center;
+	position: relative;
+	float: center;
+	text-decoration: none;
+	width: 310px;
+	height: 27px;
+	font-weight: bold;
+	color: #FFFFFF !important;
+	border: none !important;
+	cursor: pointer;
+	font-size: 12px !important;
+	margin: 3px 10px 5px 5px;
+}
+
+.breadcumbs {
+	width: 60%;
+	padding: 5px 5px 3px 5px;
+	font-size: 12px;
+	color: #808080;
+	display: inline-table;
+}
+
+.footer {
+	height: 15px;
+	display: table;
+	font-size: 10px;
+	color: #808080;
+	clear: both;
+}
+
+.h1 {
+	color: #42A79F;
+	font-size: 20px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#mainContainer {
+	height: auto;
+	width: 100%;
+	border: solid 1px #DDDDDD;
+}
+
+#containerConsultas {
+	height: auto;
+	width: 100%;
+	border: solid 2px #1287CD;
+}
+
+.tituloHeader {
+	width: 630px;
+	float: right;
+	color: #FFFFFF;
+	font-size: 22px;
+	font-weight: bold;
+	margin-top: 15px;
+	padding-right: 15px;
+	text-align: right;
+}
+
+.datosHeader {
+	width: 630px;
+	float: right;
+	color: #FFFFFF;
+	font-size: 11px;
+	margin-top: 5px;
+	padding-right: 15px;
+	text-align: right;
+}
+
+.imgpdf {
+	padding-left: 5px;
+	padding-right: 5px;
+	width: 15px;
+	height: 15px;
+	border: 0;
+}
+
+.textologout {
+	width: 12%;
+	padding: 5px 8px 3px 5px;
+	font-size: 12px;
+	color: #808080;
+	display: inline-table;
+	float: right;
+	text-align: right;
+}
+
+.textoLigas {
+	width: 12%;
+	padding: 5px 8px 3px 5px;
+	font-size: 12px;
+	color: #808080;
+	display: inline-table;
+	float: left;
+	text-align: left;
+}
+
+.ComboHoja {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #666666;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 5px;
+	letter-spacing: .5px;
+}
+
+.tituloHeader2 {
+	width: 630px;
+	float: right;
+	color: #FFFFFF;
+	font-size: 15px;
+	font-weight: bold;
+	margin-top: 15px;
+	padding-right: 15px;
+	text-align: right;
+}
+
+.TextoCampo2 {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #808080;
+	height: 16px;
+}
+ 
+.AreaCampo2 {
+	Font-size: 12px;
+	Font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: Normal;
+	Color: #808080;
+	height: 50px;
+	width:360px;
+}
+
+.mensajeError {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	Font-size: 10px;
+	font-weight: bold;
+	text-align: left;
+	color: #DF0101;
+}
+
+#mainContainerMenu {
+	height: auto;
+	width: 97%;
+	border: solid 1px #DDDDDD;
+	
+	
+}
+
+.mensajeErrorOperacion {
+ font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+ Font-size: 12px;
+ font-weight: bold;
+ text-align: center;
+ color: #DF0101;
+}
+ 
+.mensajeExitoOperacion {
+ font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+ Font-size: 12px;
+ font-weight: bold;
+ text-align: center;
+ color: #088A29;
+}
+
+.formaBackGround {
+    background-image: url(../images/.png);
+    background-repeat: no-repeat;
+    background-color: #FFFFF;
+    background-position: center top;
+}

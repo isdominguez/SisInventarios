@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/02/2014 04:39:40 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="com.javarevolutions.siycp.ejb.entity.Pedidos" table="pedidos" catalog="siycp_jr">
+        <id name="idPedido" type="java.lang.Long">
+            <column name="id_pedido" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="usuarios" class="com.javarevolutions.siycp.ejb.entity.Usuarios" fetch="select"
+        lazy="false">
+            <column name="id_usuario" not-null="true" />
+        </many-to-one>
+        <property name="fechaPedido" type="date">
+            <column name="fecha_pedido" length="10" not-null="true" />
+        </property>
+        <property name="fechaModificacion" type="date">
+            <column name="fecha_modificacion" length="10" />
+        </property>
+        <property name="horaPedido" type="time">
+            <column name="hora_pedido" length="8" not-null="true" />
+        </property>
+        <property name="condiciones" type="string">
+            <column name="condiciones" length="250" />
+        </property>
+        <set name="pedidosProductoses" table="pedidos_productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_pedido" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.PedidosProductos" />
+        </set>
+    </class>
+</hibernate-mapping>

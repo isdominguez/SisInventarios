@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catUsuarios')}"/>
+        <f:event type="preRenderView" listener="#{beanUsuarios.llenaLista}"/>
+    </f:metadata>
+    <h:form id="formTableUsuarios">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaUsuarios" var="obj" value="#{beanUsuarios.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idUsuario}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaUsuarios"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.cat.home']} #{props['com.jr.props.de']} #{props['com.jr.props.menu.cat.usuarios']}
+            </f:facet>
+
+            <p:ajax event="page" oncomplete="checkUn();"/>
+            <p:ajax event="rowDblselect" listener="#{beanUsuarios.showUsuarios}" 
+                    update=":formShowUsuarios:dialogShowUsuarios"
+                    oncomplete="widgetShowUsuarios.show();"/>
+
+            <p:column style="width:2%;">
+                <f:facet name="header">
+                    <h:selectBooleanCheckbox onclick="selectUnAll(this);" id="chSelectAll"/>
+                </f:facet>
+                <h:selectBooleanCheckbox value="#{obj.select}"/>
+            </p:column>
+
+            <p:column style="width:6%; text-align: center;">
+                <f:facet name="header">
+                    <p:commandLink onclick="widgetTablaUsuarios.unselectAllRows();"
+                        actionListener="#{beanUsuarios.onUpdateInsertRow(null)}" 
+                               update=":formAAShowUsuarios:dialogUsuarios"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetUsuarios.show();">
+                        <img src="#{resources}/images/new.gif" border="0" width="30px" height="30px"/>
+                    </p:commandLink>
+                </f:facet>
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.usuarios.nombre']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.nombre}"/>&nbsp;
+                <h:outputText value="#{obj.app}"/>&nbsp;
+                <h:outputText value="#{obj.apm}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.usuarios.telefono']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.telefono}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.usuarios.celular']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.celular}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.usuarios.otro_telefono']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.otroTelefono}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.usuarios.direccion']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.direccion}"/>
+            </p:column>
+            <p:column style="width: 2%">
+                <a href="#" title="#{props['com.jr.props.registro.delete']}" 
+                   onclick="setIdDelete('#{obj.idUsuario}','#{obj.cont}');confirmDeleteUsuarios.show();
+                   widgetTablaUsuarios.unselectAllRows(); 
+                   widgetTablaUsuarios.selectRow(#{obj.posicion});">
+                    <img src="#{resources}/images/borrar.png" border="0" width="15px" height="15px"/>
+                </a>
+            </p:column>
+            <p:column style="width: 2%">
+                <p:commandLink onclick="widgetTablaUsuarios.unselectAllRows(); 
+                   widgetTablaUsuarios.selectRow(#{obj.posicion});"
+                    actionListener="#{beanUsuarios.onUpdateInsertRow(obj)}" 
+                               update=":formAAShowUsuarios:dialogUsuarios"
+                               title="#{props['com.jr.props.registro.update']}"
+                               oncomplete="setIdActualizar(#{obj.cont});widgetUsuarios.show();">
+                    <img src="#{resources}/images/update.gif" border="0" width="15px" height="15px"/>
+                </p:commandLink>
+            </p:column>
+
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td align="left">
+                    <p:commandButton
+                        onclick="return confirmaBorradoAll();"
+                                actionListener="#{beanUsuarios.deleteAllSelect}"
+                                title="#{props['com.jr.props.registro.delete']}s"
+                                value="#{props['com.jr.props.registro.delete']}s"
+                                icon="ui-icon-close" style="font-size: 12px;"/>
+                        </td>
+                        <td align="right">
+                        <p:commandButton onclick="widgetTablaUsuarios.unselectAllRows();"
+                                actionListener="#{beanUsuarios.onUpdateInsertRow(null)}"
+                               update=":formAAShowUsuarios:dialogUsuarios"
+                               title="#{props['com.jr.props.registro.new']}"
+                               oncomplete="widgetUsuarios.show();"
+                               value="#{props['com.jr.props.registro.new']}"
+                               icon="ui-icon-newwin" style="font-size: 12px;"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </h:form>
+    
+    
+    <h:form id="formAAShowUsuarios">
+    <p:dialog id="dialogUsuarios" header="#{beanUsuarios.tituloPantalla}" widgetVar="widgetUsuarios"
+              showEffect="explode" hideEffect="fade"
+              closable="false">
+    <p:panel id="panelUsuarios">
+    <h:inputHidden id="contadorUsuariosActualizar" value="#{beanUsuarios.dominio.cont}"/>
+    <table>
+        <tr><td align="right"><h:outputLabel for="txtNombre" value="#{props['com.jr.props.menu.cat.usuarios.nombre']} : "/></td>
+        <td><p:inputText id="txtNombre" value="#{beanUsuarios.dominio.nombre}" required="true" 
+        label="#{props['com.jr.props.menu.cat.usuarios.nombre']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.nombre']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtNombre" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtApp" value="#{props['com.jr.props.menu.cat.usuarios.app']} : "/></td>
+        <td><p:inputText id="txtApp" value="#{beanUsuarios.dominio.app}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.app']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.app']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtApp" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtApm" value="#{props['com.jr.props.menu.cat.usuarios.apm']} : "/></td>
+        <td><p:inputText id="txtApm" value="#{beanUsuarios.dominio.apm}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.apm']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.apm']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtApm" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtTelefono" value="#{props['com.jr.props.menu.cat.usuarios.telefono']} : "/></td>
+        <td><p:inputText id="txtTelefono" value="#{beanUsuarios.dominio.telefono}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.telefono']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.telefono']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtTelefono" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCelular" value="#{props['com.jr.props.menu.cat.usuarios.celular']} : "/></td>
+        <td><p:inputText id="txtCelular" value="#{beanUsuarios.dominio.celular}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.celular']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.celular']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtCelular" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtOtroTelefono" value="#{props['com.jr.props.menu.cat.usuarios.otro_telefono']} : "/></td>
+        <td><p:inputText id="txtOtroTelefono" value="#{beanUsuarios.dominio.otroTelefono}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.otro_telefono']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.otro_telefono']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtOtroTelefono" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtDireccion" value="#{props['com.jr.props.menu.cat.usuarios.direccion']} : "/></td>
+        <td><p:inputText id="txtDireccion" value="#{beanUsuarios.dominio.direccion}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.direccion']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.direccion']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtDireccion" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCalle" value="#{props['com.jr.props.menu.cat.usuarios.calle']} : "/></td>
+        <td><p:inputText id="txtCalle" value="#{beanUsuarios.dominio.calle}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.calle']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.calle']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtCalle" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtNumero" value="#{props['com.jr.props.menu.cat.usuarios.numero']} : "/></td>
+        <td><p:inputText id="txtNumero" value="#{beanUsuarios.dominio.numero}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.numero']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.numero']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtNumero" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtColonia" value="#{props['com.jr.props.menu.cat.usuarios.colonia']} : "/></td>
+        <td><p:inputText id="txtColonia" value="#{beanUsuarios.dominio.colonia}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.colonia']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.colonia']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtColonia" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCodigoPostal" value="#{props['com.jr.props.menu.cat.usuarios.codigo_postal']} : "/></td>
+        <td><p:inputText id="txtCodigoPostal" value="#{beanUsuarios.dominio.codigoPostal}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.codigo_postal']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.codigo_postal']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtCodigoPostal" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtCiudad" value="#{props['com.jr.props.menu.cat.usuarios.ciudad']} : "/></td>
+        <td><p:inputText id="txtCiudad" value="#{beanUsuarios.dominio.ciudad}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.ciudad']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.ciudad']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtCiudad" display="icon"/></td></tr>
+        <tr><td align="right"><h:outputLabel for="txtEstado" value="#{props['com.jr.props.menu.cat.usuarios.estado']} : "/></td>
+        <td><p:inputText id="txtEstado" value="#{beanUsuarios.dominio.estado}" required="false" 
+        label="#{props['com.jr.props.menu.cat.usuarios.estado']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.usuarios.estado']}' #{props['com.jr.is.required']}"
+        disabled="#{beanUsuarios.dominio.disabled}"/></td>
+        <td><p:message for="txtEstado" display="icon"/></td></tr>
+        <tr>
+            <td align="right">
+                <p:commandButton id="btnCancelar" value="#{props['com.jr.props.btn.cancelar']}"
+                                 update=":formTableUsuarios:tablaUsuarios"
+                                 immediate="true"
+                                 onclick="widgetUsuarios.hide();">
+                    <p:resetInput target="panelUsuarios"/>
+                </p:commandButton>
+            </td>
+            <td align="center">
+                <p:commandButton id="btnAceptar"
+                update="panelUsuarios :formTableUsuarios:messages :formTableUsuarios:tablaUsuarios"
+                actionListener="#{beanUsuarios.save}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaUsuarios.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanUsuarios.showSave}"/>
+                <p:commandButton id="btnActualizar"
+                update="panelUsuarios :formTableUsuarios:messages :formTableUsuarios:tablaUsuarios"
+                actionListener="#{beanUsuarios.updateRow}" 
+                value="#{props['com.jr.props.btn.aceptar']}" 
+                oncomplete="widgetTablaUsuarios.unselectAllRows();
+                validateData(args);"
+                rendered="#{beanUsuarios.showUpdate}"/>
+            </td>
+        </tr>
+    </table>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <h:form id="formShowUsuarios">
+    <p:dialog id="dialogShowUsuarios" header="#{beanUsuarios.tituloPantalla}" widgetVar="widgetShowUsuarios"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+    <p:panel>
+    <fieldset>
+    <table>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.nombre']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.nombre}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.app']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.app}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.apm']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.apm}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.telefono']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.telefono}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.celular']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.celular}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.otro_telefono']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.otroTelefono}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.direccion']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.direccion}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.calle']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.calle}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.numero']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.numero}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.colonia']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.colonia}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.codigo_postal']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.codigoPostal}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.ciudad']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.ciudad}"/></td></tr>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.usuarios.estado']} : "/></td>
+            <td><h:outputText value="#{beanUsuarios.dominio.estado}"/></td></tr>
+    </table>
+    </fieldset>
+    <fieldset>
+    <table width="100%" align="center">
+        <tr>
+            <td align="center" colspan="2">
+                <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 update=":formTableUsuarios:tablaUsuarios"
+                                 onclick="widgetShowUsuarios.hide();"/>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+        
+    <p:confirmDialog id="confirmarDelete" showEffect="fade" hideEffect="clip" appendToBody="true"
+                message="¿#{props['com.jr.props.titulo.confirm.delete']}?"
+                header="#{props['com.jr.props.registro.delete']}" severity="alert" widgetVar="confirmDeleteUsuarios">
+        <h:form id="formConfirmDelete">
+        <center>
+        <p:commandButton id="btnBorrarSI" value="#{props['com.jr.props.btn.si']}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+                        actionListener="#{beanUsuarios.delete}" 
+                        update=":formTableUsuarios:tablaUsuarios :formTableUsuarios:messages"
+                        oncomplete="checkUn(); validateDelete(args);"/>
+        <h:inputHidden id="idUsuariosDelete" value="#{beanUsuarios.dominio.idUsuario}"/>
+        <h:inputHidden id="contadorUsuariosDelete" value="#{beanUsuarios.dominio.cont}"/>
+        <p:commandButton id="btnBorrarNO" value="#{props['com.jr.props.btn.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                        onclick="confirmDeleteUsuarios.hide();"/>
+        </center>
+        </h:form>
+    </p:confirmDialog>
+        
+    <script type="text/javascript">
+    function checkUn() {
+        var obj = document.getElementById("formTableUsuarios:tablaUsuarios:chSelectAll");
+        obj.checked = false;
+    }   
+    
+    function setIdActualizar(cont) {
+        document.getElementById("formAAShowUsuarios:contadorUsuariosActualizar").value = cont;
+    }
+    
+    function setIdDelete(id, cont) {
+        document.getElementById("formConfirmDelete:idUsuariosDelete").value = id;
+        document.getElementById("formConfirmDelete:contadorUsuariosDelete").value = cont;
+    }
+    
+    function validateDelete(args) {
+        if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            confirmDeleteUsuarios.hide();
+        }
+    }
+    
+    function confirmaBorradoAll() {
+        var obj = document.getElementById("formTableUsuarios:tablaUsuarios:chSelectAll");
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        var checado = false;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                    if(obj.id != element.id) {
+                        if(element.checked) {
+                            checado = true;
+                            break;
+                        }
+                    }
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+        if(checado) {
+            var response = confirm("¿#{props['com.jr.props.titulo.confirm.delete']}?");
+            if(response) {
+                obj.checked = false;
+                checkUn();
+            }
+            return response;
+        } else {
+            alert("#{props['com.jr.props.msg.registro.deleteAll.vacio']}");
+            return false;
+        }
+        return false;
+    }
+    
+    function deleteAllMsg(args) {
+        alert(args.errorTransaction);
+    }
+    
+    function validateData(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetUsuarios.hide();
+        }
+    }
+    
+    function selectUnAll(obj) {
+        var elementos = document.getElementsByTagName("input");
+        var cont = 0;
+        var type = elementos[0].type;
+        while(type != null) {
+            try {
+                var element = elementos[cont++];
+                type = element.type;
+                if(type == "checkbox") {
+                     element.checked = obj.checked;
+                }
+            } catch(e) {
+                type = null;
+            }
+        }
+    }
+    </script>
+    </ui:define>
+</ui:composition>

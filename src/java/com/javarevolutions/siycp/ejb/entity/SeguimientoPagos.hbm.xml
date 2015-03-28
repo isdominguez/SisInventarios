@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/02/2014 04:39:40 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="com.javarevolutions.siycp.ejb.entity.SeguimientoPagos" table="seguimiento_pagos" catalog="siycp_jr">
+        <id name="idSeguimientoPago" type="int">
+            <column name="id_seguimiento_pago" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="usuarios" class="com.javarevolutions.siycp.ejb.entity.Usuarios" fetch="select"
+        lazy="false">
+            <column name="id_usuario" not-null="true" />
+        </many-to-one>
+        <property name="totalDeuda" type="double">
+            <column name="total_deuda" precision="22" scale="0" not-null="true" />
+        </property>
+        <set name="pagoses" table="pagos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_seguimiento_pago" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.Pagos" />
+        </set>
+    </class>
+</hibernate-mapping>

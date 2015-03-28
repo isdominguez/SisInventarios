@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/02/2014 04:39:40 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="com.javarevolutions.siycp.ejb.entity.Pagos" table="pagos" catalog="siycp_jr">
+        <id name="idPago" type="long">
+            <column name="id_pago" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="seguimientoPagos" class="com.javarevolutions.siycp.ejb.entity.SeguimientoPagos" 
+                     fetch="select" lazy="false">
+            <column name="id_seguimiento_pago" not-null="true" />
+        </many-to-one>
+        <property name="cantidadPago" type="double">
+            <column name="cantidad_pago" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="fechaPago" type="timestamp">
+            <column name="fecha_pago" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

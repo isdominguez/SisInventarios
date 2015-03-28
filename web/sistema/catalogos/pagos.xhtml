@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition template="/WEB-INF/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:define name="bodyJR">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{beanMenu.changeRutaMenu('catSeguimientoPagos')}"/>
+        <f:event type="preRenderView" listener="#{beanSeguimientoPagos.llenaLista}"/>
+    </f:metadata>
+    <h:form id="formTableSeguimientoPagos">
+        <p:growl id="messages" showDetail="true" showSummary="true"/>
+        <p:dataTable id="tablaSeguimientoPagos" var="obj" value="#{beanSeguimientoPagos.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idSeguimientoPago}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaSeguimientoPagos"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">
+                #{props['com.jr.props.menu.cat.seguimiento_pagos']}
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.seguimiento_pagos.proveedor']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.usuarios.nombre}"/>&nbsp;
+                <h:outputText value="#{obj.usuarios.app}"/>&nbsp;
+                <h:outputText value="#{obj.usuarios.apm}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.seguimiento_pagos.total_deuda']}"/>
+                </f:facet>
+                <h:outputText value="$" style="font-size: 14px; font-weight: bolder; color: RED;"/>
+                <h:outputText value="#{obj.totalDeuda}" style="font-size: 14px; font-weight: bolder; color: RED;">
+                    <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column style="width:15%; text-align: center;">
+                <p:commandLink title="#{props['com.jr.props.menu.cat.seguimiento_pagos.pagar']}"
+                               actionListener="#{beanPagos.nuevoPago(obj)}" 
+                               update=":formAAShowPagos:dialogNuevoPago"
+                               oncomplete="widgetPagos.show();">
+                    <img src="#{resources}/images/new.gif" border="0" width="30px" height="20px"/>
+                    <h:outputText value="#{props['com.jr.props.menu.cat.seguimiento_pagos.pagar']}"/>
+                </p:commandLink>
+            </p:column>
+            <p:column style="width:15%; text-align: center;">
+                <p:commandLink title="#{props['com.jr.props.menu.cat.seguimiento_pagos.ver_pagos']}"
+                               actionListener="#{beanPagos.llenaPagos(obj)}" 
+                               update=":formShowTablePagos:dialogShowPagos"
+                               oncomplete="widgetShowPagos.show();">
+                    <img src="#{resources}/images/ver.png" border="0" width="30px" height="20px"/>&nbsp;
+                    <h:outputText value="#{props['com.jr.props.menu.cat.seguimiento_pagos.ver_pagos']}"/>
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+    
+    <h:form id="formShowTablePagos">
+    <p:dialog id="dialogShowPagos" header="#{props['com.jr.props.menu.cat.pagos.realizados']}" widgetVar="widgetShowPagos"
+              showEffect="explode" hideEffect="fade"
+              closable="false" modal="true" appendToBody="true">
+        
+        <table>
+        <tr><td style="font-size: 18px;"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedor_one']} : "/></td>
+            <td style="font-size: 18px;">
+            <h:outputText value="#{beanPagos.usuarios.nombre}"/>&nbsp;
+            <h:outputText value="#{beanPagos.usuarios.app}"/>&nbsp;
+            <h:outputText value="#{beanPagos.usuarios.apm}"/>
+            </td></tr>
+        </table>
+        
+        <p:dataTable id="tablaPagos" var="obj" value="#{beanPagos.listaModel}"
+             paginator="true" rows="10" selectionMode="single"
+             lazy="true" rowKey="#{obj.idPago}"
+             rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+             style="width: 100%; font-size: 14px;" widgetVar="widgetTablaPagos"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.pagos.id_pago']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.cont}"/>
+            </p:column>
+            
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.pagos.cantidad_pago']}"/>
+                </f:facet>
+                <h:outputText value="$"/>
+                <h:outputText value="#{obj.cantidadPago}">
+                    <f:convertNumber locale="en" pattern="#,##0.00;(#,##0.00)"/>
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.pagos.fecha_pago']}"/>
+                </f:facet>
+                <h:outputText value="#{obj.fechaPago}">
+                    <f:convertDateTime dateStyle="full" timeZone="EST" type="date"/>
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{props['com.jr.props.menu.cat.pagos.hora_pago']}"/>
+                </f:facet>
+                <h:outputText value="#{beanMenu.onlyTime(obj.fechaPago)}"/>
+            </p:column>
+
+            <f:facet name="footer">
+                <table>
+                    <tr>
+                        <td align="center">
+                            <p:commandButton id="btnOkAceptar" value="Ok"
+                                 update=":formTableSeguimientoPagos:tablaSeguimientoPagos"
+                                 immediate="true"
+                                 onclick="widgetShowPagos.hide();"/>
+                        </td>
+                    </tr>
+                </table>
+            </f:facet>
+        </p:dataTable>
+    </p:dialog>
+    </h:form>
+        
+    <h:form id="formAAShowPagos">
+    <p:dialog id="dialogNuevoPago" header="#{beanPagos.tituloPantalla}" widgetVar="widgetPagos"
+              showEffect="explode" hideEffect="fade"
+              closable="false">
+    <p:panel id="panelPagos">
+    <table>
+        <tr><td align="right"><h:outputLabel value="#{props['com.jr.props.menu.cat.proveedor_one']} : "/></td>
+            <td>
+            <h:outputText value="#{beanPagos.usuarios.nombre}"/>&nbsp;
+            <h:outputText value="#{beanPagos.usuarios.app}"/>&nbsp;
+            <h:outputText value="#{beanPagos.usuarios.apm}"/>
+            </td></tr>
+        
+        <tr><td align="right"><h:outputLabel for="txtCantidadPago" value="#{props['com.jr.props.menu.cat.pagos.cantidad_pago']} : "/></td>
+        <td><p:inputText id="txtCantidadPago" value="#{beanPagos.dominio.cantidadPago}" required="true" 
+        label="#{props['com.jr.props.menu.cat.pagos.cantidad_pago']}" requiredMessage="#{props['com.jr.field']} '#{props['com.jr.props.menu.cat.pagos.cantidad_pago']}' #{props['com.jr.is.required']}"
+        disabled="#{beanPagos.dominio.disabled}"/></td>
+        <td><p:message for="txtCantidadPago" display="icon"/></td></tr>
+
+        <tr>
+            <td align="right">
+                <p:commandButton id="btnCancelar" value="#{props['com.jr.props.btn.cancelar']}"
+                                 update=":formTableSeguimientoPagos:tablaSeguimientoPagos"
+                                 immediate="true"
+                                 onclick="widgetPagos.hide();">
+                    <p:resetInput target="panelPagos"/>
+                </p:commandButton>
+            </td>
+            <td align="center">
+                <p:commandButton id="btnAceptar"
+                update="panelPagos :formTableSeguimientoPagos:messages :formTableSeguimientoPagos:tablaSeguimientoPagos"
+                actionListener="#{beanPagos.save}"
+                value="#{props['com.jr.props.btn.aceptar']}"
+                oncomplete="validateData(args);"/>
+            </td>
+        </tr>
+    </table>
+    </p:panel>
+    </p:dialog>
+    </h:form>
+    <script type="text/javascript">
+    function validateData(args) {
+        if(args.validationFailed) {
+            alert("#{props['com.jr.props.titulo.verifica.datos']}");
+        } else if(args.statusTransaction == false) {
+            alert(args.errorTransaction);
+        } else {
+            widgetPagos.hide();
+        }
+    }
+ 
+    </script>
+    </ui:define>
+</ui:composition>

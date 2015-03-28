@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13/02/2014 04:39:40 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="com.javarevolutions.siycp.ejb.entity.TiposMedidas" table="tipos_medidas" catalog="siycp_jr">
+        <id name="idTipoMedida" type="java.lang.Integer">
+            <column name="id_tipo_medida" />
+            <generator class="identity" />
+        </id>
+        <property name="tipoMedida" type="string">
+            <column name="tipo_medida" length="50" not-null="true" />
+        </property>
+        <set name="productoses" table="productos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_tipo_medida" not-null="true" />
+            </key>
+            <one-to-many class="com.javarevolutions.siycp.ejb.entity.Productos" />
+        </set>
+    </class>
+</hibernate-mapping>

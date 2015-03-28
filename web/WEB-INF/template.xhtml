@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:view contentType="text/html">
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{beanMenu.inicia}"/>
+            <f:event type="preRenderView" listener="#{beanMensajes.llenaMensajes}"/>
+        </f:metadata>
+        <h:head>
+            <ui:param name="resources" value="#{request.getContextPath()}/resources"/>
+            <ui:param name="rutaMenu" value="#{session.getAttribute('rutaMenu')}"/>
+            <ui:param name="usuario" value="#{session.getAttribute('userInSession')}"/>
+            <ui:param name="path" value="#{request.getContextPath()}"/>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <link rel="shortcut icon" type="image/png" href="#{path}/LogoJR.png"/>
+                <title>#{props['com.jr.props.title']}</title>
+                <link href="#{resources}/css/jr.css" rel="stylesheet" type="text/css"/>
+            </f:facet>
+        </h:head>
+        <h:body>
+        <center>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="center" style="border: 0;">
+            <div style="width: 85%;">
+            <table width="100%;">
+                <tr>
+                    <td align="left">
+                        <label style="font-size: 12px; font-weight: bold;">#{props['com.jr.props.ruta.menu']}: </label>
+                        <img src="${resources}/images/105.png" border="0"/>
+                        <label style="font-size: 13px; color: red; font-style: italic; font-weight: bold;">#{beanIdioma.rutaMenu}</label>
+                    </td>
+                    <td align="right" style="font-size: 12px;">
+                        <table>
+                            <tr>
+                                <td>
+                                    #{props['com.jr.props.welcome']}: ${usuario.getUsuarios().getNombre()} ${usuario.getUsuarios().getApp()} ${usuario.getUsuarios().getApm()}.
+                                    #{props['com.jr.props.access']}: El <h:outputText value="#{usuario.getFechaAcceso()}">
+                                    <f:convertDateTime dateStyle="full" timeZone="EST" type="date"/>
+                                    </h:outputText>, a las&nbsp;<h:outputText 
+                                        value="#{beanMenu.onlyTime(usuario.getFechaAcceso())}"/>
+                                </td>
+                                <td>
+                                <h:form id="formIdioma">
+                                    <p:commandLink id="linkMensajes"
+                                        title="#{props['com.jr.props.msg.aviso.importante']}"
+                                        onclick="widgetMensajesImportantes.show();"
+                                                   rendered="#{beanMensajes.showMessages}">
+                                    <img src="${resources}/images/email.gif" border="0" width="120px" height="20px"/>
+                                    </p:commandLink>
+                                </h:form>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%">
+            <tr>
+                <td>
+                <div id="mainContainer">
+                    <h:form>
+                    <table width="100%">
+                    <tr>
+                    <td>
+                        <p:menubar style="font-size: 14px;">        
+                        <p:menuitem value="#{props['com.jr.props.menu.inicio']}" 
+                                    title="#{props['com.jr.props.menu.inicio']}"
+                                    url="/sistema/welcome.jr" icon="ui-icon-home"/>
+                        <p:submenu label="#{props['com.jr.props.menu.cat.home']}" icon="ui-icon-disk">
+                            <p:menuitem value="#{props['com.jr.props.menu.cat.productos']}"
+                                        title="#{props['com.jr.props.menu.cat.productos']}"
+                                        url="/sistema/catalogos/productos.jr" icon="ui-icon-check"/>
+                            <p:menuitem value="#{props['com.jr.props.menu.cat.tipos_medidas']}"
+                                        title="#{props['com.jr.props.menu.cat.tipos_medidas']}"
+                                        url="/sistema/catalogos/tipos_medidas.jr" icon="ui-icon-check"/>
+                            <p:menuitem value="#{props['com.jr.props.menu.cat.usuarios']}"
+                                        title="#{props['com.jr.props.menu.cat.usuarios']}"
+                                        url="/sistema/catalogos/usuarios.jr" icon="ui-icon-check"/>
+                            <p:menuitem value="#{props['com.jr.props.menu.cat.users_menu_administradores']}"
+                                        title="#{props['com.jr.props.menu.cat.users']}"
+                                        url="/sistema/catalogos/users.jr" icon="ui-icon-check"/>
+                        </p:submenu>
+                        <p:menuitem value="#{props['com.jr.props.menu.pedidos.home']}" 
+                                    title="#{props['com.jr.props.menu.pedidos.home']}"
+                                    url="/sistema/catalogos/pedidos.jr"
+                                    icon="ui-icon-folder-collapsed"/>
+                        <p:menuitem value="#{props['com.jr.props.menu.cat.seguimiento_pagos']}" 
+                                    title="#{props['com.jr.props.menu.cat.seguimiento_pagos']}"
+                                    url="/sistema/catalogos/pagos.jr" icon="ui-icon-star"/>
+                        <p:menuitem value="#{props['com.jr.props.menu.invent.home']}" 
+                                    title="#{props['com.jr.props.menu.invent.home']}"
+                                    url="/sistema/catalogos/inventarios.jr" 
+                                    icon="ui-icon-star"/>
+                        <p:menuitem value="#{props['com.jr.props.menu.cat.ventas']}" 
+                                    title="#{props['com.jr.props.menu.cat.ventas']}"
+                                    url="/sistema/catalogos/ventas.jr" 
+                                    icon="ui-icon-star"/>
+                        <p:menuitem value="#{props['com.jr.props.menu.corte.ventas']}" 
+                                    title="#{props['com.jr.props.menu.corte.ventas']}"
+                                    url="/sistema/catalogos/corteCaja.jr" icon="ui-icon-scissors"/>
+                        <p:submenu label="#{props['com.jr.props.menu.dir.home']}" icon="ui-icon-person">
+                            <p:menuitem value="#{props['com.jr.props.menu.dir.clientes']}" 
+                                        title="#{props['com.jr.props.menu.dir.clientes']}"
+                                        url="/sistema/catalogos/clientes.jr" icon="ui-icon-contact"/>
+                            <p:menuitem value="#{props['com.jr.props.menu.dir.provee']}" 
+                                        title="#{props['com.jr.props.menu.dir.provee']}"
+                                        url="/sistema/catalogos/proveedores.jr" icon="ui-icon-contact"/>
+                        </p:submenu>
+                        <p:submenu label="#{props['com.jr.props.menu.tools.home']}">
+                            <p:menuitem value="#{props['com.jr.props.menu.tools.cc']}" 
+                                        title="#{props['com.jr.props.menu.tools.cc']}"
+                                        url="/sistema/catalogos/changePassword.jr" icon="ui-icon-arrowrefresh-1-w"/>
+                        </p:submenu>
+                        </p:menubar>
+                    </td>
+                    <td align="right" width="70px">
+                        <p:menubar style="font-size: 14px; width: 70px;">
+                        <p:menuitem value="#{props['com.jr.props.menu.exit']}"
+                                    title="#{props['com.jr.props.menu.exit']}"
+                                    url="/logout.jsp" icon="ui-icon-extlink"
+                                    style="margin-left: 8px;"/>
+                        </p:menubar>
+                    </td>
+                    </tr>
+                    </table>
+                </h:form>
+                </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%">
+                    <div id="mainContainer">
+                    <ui:insert name="bodyJR"/>
+                    </div>
+                </td>
+            </tr>
+            </table>
+            </div>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" style="border: 0;">
+                <!--
+                <table align="center" width="85%">
+                    <tr>
+                        <td height="0.5px" bgcolor="#E0E0E0"></td>
+                    </tr>
+                    <tr class="TextoCampo2">
+                        <td class="textoFooter" align="center">
+                            #{props['com.jr.props.derechos.only.jr']}
+                        </td>
+                    </tr>
+                </table>
+                -->
+            </p:layoutUnit>
+        </p:layout>
+        </center>
+        <h:form id="formMensajesImportantes">
+            <p:dialog id="dialogShowUsuarios" header="#{props['com.jr.props.msg.aviso.importante']}" 
+                      widgetVar="widgetMensajesImportantes"
+                      showEffect="explode" hideEffect="fade"
+                      closable="false" modal="true" appendToBody="true">
+            <p:panel>
+            <fieldset>
+            <table>
+                <tr>
+                    <td>
+                        <div style="width: 600px; height: 300px; overflow: auto;">
+                            <p:dataTable id="consultaProductosAdds" var="obj" value="#{beanMensajes.mensajes}"
+                                         style="font-size: 14px;">
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{props['com.jr.props.msg.aviso.importante.header.titulo']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{obj.titulo}" style="font-size: 14px; color: red; font-weight: bold;"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{props['com.jr.props.msg.aviso.importante.header.msg']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{obj.mensaje}" style="font-size: 14px; color: red; font-weight: bold;"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <p:commandButton id="btnOkShow" value="#{props['com.jr.props.btn.aceptar']}"
+                                 onclick="widgetMensajesImportantes.hide();"/>
+                    </td>
+                </tr>
+            </table>
+            </fieldset>
+            </p:panel>
+            </p:dialog>
+        </h:form>
+        </h:body>
+    </f:view>
+</html>
